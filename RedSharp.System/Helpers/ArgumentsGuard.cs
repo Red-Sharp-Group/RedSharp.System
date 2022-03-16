@@ -10,16 +10,30 @@ namespace RedSharp.Sys.Helpers
     public static class ArgumentsGuard
     {
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static void ThrowIfNull(Object value, String name)
+        public static void ThrowIfNull(Object value, [CallerArgumentExpression("value")] String name = "value")
         {
             if (value == null)
                 throw new ArgumentNullException(name);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static void ThrowIfLessOrEqualZero(int value, String name)
+        public static void ThrowIfLessOrEqualZero(int value, [CallerArgumentExpression("value")] String name = "value")
         {
             if (value <= 0)
+                throw new ArgumentOutOfRangeException(name);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static void ThrowIfLessZero(int value, [CallerArgumentExpression("value")] String name = "value")
+        {
+            if (value < 0)
+                throw new ArgumentOutOfRangeException(name);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static void ThrowIfNotInRange(int value, int start, int end, [CallerArgumentExpression("value")] String name = "value")
+        {
+            if (start > value || value > end)
                 throw new ArgumentOutOfRangeException(name);
         }
     }

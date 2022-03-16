@@ -9,12 +9,27 @@ using RedSharp.Sys.Interfaces.Entities;
 
 namespace RedSharp.Sys.Abstracts
 {
+    /// <summary>
+    /// Object that represents external application in this application.
+    /// </summary>
+    /// <remarks>
+    /// By default this object has to be used as a wrapper, it cannot start or kill the process. 
+    /// </remarks>
     public abstract class ProcessKeeperBase : CriticalDisposableBase, IProcessKeeper
     {
         private String _exitApplicationError;
 
+        /// <inheritdoc/>
         public Process AssociatedProcess { get; private set; }
 
+        /// <summary>
+        /// Associates the process with this object.
+        /// </summary>
+        /// <remarks>
+        /// If object has associated process it will be removed from this object.
+        /// </remarks>
+        /// <exception cref="ArgumentNullException">If process is null.</exception>
+        /// <exception cref="ArgumentException">If process is exited.</exception>
         protected virtual void Associate(Process process)
         {
             ArgumentsGuard.ThrowIfNull(process, nameof(process));

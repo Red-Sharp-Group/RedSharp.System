@@ -7,24 +7,28 @@ using System.Threading.Tasks;
 
 namespace RedSharp.Sys.Helpers
 {
-    public static unsafe class NativeArgumentsGuard
+    public static unsafe class NativeGuard
     {
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static void ThrowIfNull(IntPtr value, String name)
+        public static void ThrowIfNull(IntPtr value, [CallerArgumentExpression("value")] String name = "value")
         {
             if (value == IntPtr.Zero)
                 throw new ArgumentNullException(name);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static void ThrowIfNull(void* value, String name)
+        public static void ThrowIfNull(void* value, [CallerArgumentExpression("value")] String name = "value")
         {
             if (value == null)
                 throw new ArgumentNullException(name);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static void ThrowIfPointerIsOutOfRange(void* structurePointer, int structureSize, void* toCheckPointer, int toCheckSize, String name)
+        public static void ThrowIfPointerIsOutOfRange(void* structurePointer, 
+                                                      int structureSize, 
+                                                      void* toCheckPointer, 
+                                                      int toCheckSize, 
+                                                      [CallerArgumentExpression("toCheckPointer")] String name = "toCheckPointer")
         {
             if ((long)toCheckPointer < (long)structurePointer ||
                 (long)toCheckPointer + toCheckSize > (long)structurePointer + structureSize)
