@@ -7,6 +7,10 @@ using System.Threading.Tasks;
 
 namespace RedSharp.Sys.Abstracts
 {
+    /// <summary>
+    /// Improved version of <see cref="ProcessKeeperBase"/>
+    /// Will kill process while disposing.
+    /// </summary>
     public abstract class ProcessOwnerBase : ProcessKeeperBase
     {
         protected override void InternalDispose(bool manual)

@@ -5,7 +5,7 @@
     <RootNamespace>RedSharp.Sys</RootNamespace>
   </PropertyGroup>
 
-  <Import Project="$(SolutionDir)\Definitions.props"/>
+  <Import Project="$(ProjectDir)..\Definitions.props" />
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
