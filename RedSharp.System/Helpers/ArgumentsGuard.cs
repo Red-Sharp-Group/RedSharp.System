@@ -4,6 +4,7 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
+using RedSharp.Sys.Interfaces.Shared;
 
 namespace RedSharp.Sys.Helpers
 {
@@ -42,6 +43,13 @@ namespace RedSharp.Sys.Helpers
         {
             if (String.IsNullOrEmpty(value))
                 throw new ArgumentException(name, "String cannot be null or empty.");
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static void ThrowIfObjectDisposed(IDisposeIndication value, [CallerArgumentExpression("value")] String name = "value")
+        {
+            if (value.IsDisposed)
+                throw new ObjectDisposedException(name);
         }
     }
 }
