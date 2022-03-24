@@ -51,6 +51,29 @@ namespace RedSharp.Sys.Utils
             _lock = new Object();
             _spinlock = new SpinLock();
         }
+        
+        /// <summary>
+        /// Returns number of filled cells from the front buffer.
+        /// </summary>
+        public int GetCount()
+        {
+            //Takes our ticket, that guarantees that
+            //other thread will not switch the buffer.
+            _semaphore.Wait();
+
+            bool lockTaken = false;
+
+            _spinlock.Enter(ref lockTaken);
+
+            var result = _currentIndex;
+
+            if (lockTaken)
+                _spinlock.Exit(false);
+
+            _semaphore.Release();
+
+            return result;
+        }
 
         /// <summary>
         /// Write an entry to the front buffer.
