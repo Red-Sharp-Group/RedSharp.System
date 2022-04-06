@@ -36,5 +36,19 @@ namespace RedSharp.Sys.Helpers
                 throw new ArgumentOutOfRangeException(name);
             }
         }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static void ThrowIfPointerIsOutOfRange(IntPtr structurePointer, 
+                                                      int structureSize,
+                                                      IntPtr toCheckPointer, 
+                                                      int toCheckSize, 
+                                                      [CallerArgumentExpression("toCheckPointer")] String name = "toCheckPointer")
+        {
+            if ((long)toCheckPointer < (long)structurePointer ||
+                (long)toCheckPointer + toCheckSize > (long)structurePointer + structureSize)
+            {
+                throw new ArgumentOutOfRangeException(name);
+            }
+        }
     }
 }
