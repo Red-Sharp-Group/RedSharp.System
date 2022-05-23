@@ -14,13 +14,8 @@ namespace RedSharp.Sys.Utils
     /// Simple wrapper to manage a native structure 
     /// or create it in the managed environment.
     /// </summary>
-    public unsafe class NativeWrapper<TStructure> : NativeStructureBase where TStructure : unmanaged
+    public unsafe class NativeWrapper<TStructure> : NativeWrapperBase<TStructure> where TStructure : unmanaged
     {
-        private const String SizesAreNotSameError = "Input size has to be more or equal to wrapped structure.";
-
-        private INativeStructure _basicStructure;
-        private TStructure* _structure;
-
         /// <summary>
         /// Allocates a zeroed piece of memory just in size of the structure.
         /// </summary>
@@ -36,12 +31,7 @@ namespace RedSharp.Sys.Utils
         /// <exception cref="ArgumentException">If size is wrong.</exception>
         public NativeWrapper(int size)
         {
-            ArgumentsGuard.ThrowIfLessZero(size);
-            ThrowIfSizeIsLessThanStructure(size);
-
-            AllocateMemory(size);
-
-            _structure = (TStructure*)_pointer;
+            Initialize(size);
         }
 
         /// <summary>
@@ -65,16 +55,7 @@ namespace RedSharp.Sys.Utils
         /// <exception cref="ArgumentException">If size is wrong.</exception>
         public NativeWrapper(IntPtr pointer, int size, bool makeCopy = true)
         {
-            NativeGuard.ThrowIfNull(pointer);
-            ArgumentsGuard.ThrowIfLessZero(size);
-            ThrowIfSizeIsLessThanStructure(size);
-
-            if (makeCopy)
-                CopyMemory(pointer, size);
-            else
-                SetMemory(pointer, size);
-
-            _structure = (TStructure*)_pointer;
+            Initialize(pointer, size, makeCopy);
         }
 
         /// <summary>
@@ -106,45 +87,7 @@ namespace RedSharp.Sys.Utils
         /// <exception cref="ArgumentOutOfRangeException">If new structure is outside of the basic structure.</exception>
         public NativeWrapper(INativeStructure basic, int offset, int size, bool makeCopy = true)
         {
-            ArgumentsGuard.ThrowIfNull(basic);
-            ArgumentsGuard.ThrowIfDisposed(basic);
-            ArgumentsGuard.ThrowIfLessZero(size);
-            ThrowIfSizeIsLessThanStructure(size);
-
-            var targetPointer = basic.UnsafeHandle + offset;
-
-            NativeGuard.ThrowIfPointerIsOutOfRange(basic.UnsafeHandle, basic.Size, targetPointer, size, "computed pointer");
-
-            if (makeCopy)
-            {
-                CopyMemory(targetPointer, size);
-
-                //We don't need to hold a basic structure because we copied this thing.
-            }
-            else
-            {
-                SetMemory(targetPointer, size);
-
-                _basicStructure = basic;
-            }
-
-            _structure = (TStructure*)_pointer;
-        }
-
-        /// <inheritdoc/>
-        /// <remarks>
-        /// If structure is created from other <see cref="INativeStructure"/> without coping 
-        /// then <see cref="IsDisposed"/> will be connected to the basic <see cref="INativeStructure"/>
-        /// </remarks>
-        public override bool IsDisposed
-        {
-            get
-            {
-                if (_basicStructure == null)
-                    return base.IsDisposed;
-                else
-                    return base.IsDisposed || _basicStructure.IsDisposed;
-            }
+            Initialize(basic, offset, size, makeCopy);
         }
 
         /// <summary>
@@ -161,23 +104,8 @@ namespace RedSharp.Sys.Utils
             {
                 ThrowIfDisposed();
 
-                return ref *_structure;
+                return ref InternalValue;
             }
-        }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private void ThrowIfSizeIsLessThanStructure(int value, [CallerArgumentExpression("value")] String name = "value")
-        {
-            if (value < sizeof(TStructure))
-                throw new ArgumentOutOfRangeException(name, SizesAreNotSameError);
-        }
-
-        protected override void InternalDispose(bool manual)
-        {
-            _structure = null;
-            _basicStructure = null;
-
-            base.InternalDispose(manual);
         }
     }
 }

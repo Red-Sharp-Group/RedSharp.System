@@ -17,24 +17,24 @@ namespace RedSharp.Sys.Utils
     /// This guy can take zero length just to not make exclusions for the zero length cases (but this is pointless actually)
     /// <br/>But I'm not sure that the system allocator on another system can allocate zero length piece of memory (Windows can)
     /// </remarks>
-    public unsafe class NativeBuffer<TSructure> : NativeStructureBase, IEnumerable<TSructure> where TSructure : unmanaged
+    public unsafe class NativeBuffer<TItem> : OwnedStructureBase, IEnumerable<TItem> where TItem : unmanaged
     {
         /// <summary>
         /// Just to have an ability to LINQ this thing.
         /// </summary>
-        private class NativeBufferEnumerator : IEnumerator<TSructure>
+        private class NativeBufferEnumerator : IEnumerator<TItem>
         {
-            private NativeBuffer<TSructure> _buffer;
+            private NativeBuffer<TItem> _buffer;
             private int _index;
 
-            public NativeBufferEnumerator(NativeBuffer<TSructure> owner)
+            public NativeBufferEnumerator(NativeBuffer<TItem> owner)
             {
                 _buffer = owner;
 
                 Reset();
             }
 
-            public TSructure Current => _buffer[_index];
+            public TItem Current => _buffer[_index];
 
             object IEnumerator.Current => Current;
 
@@ -57,9 +57,6 @@ namespace RedSharp.Sys.Utils
             }
         }
 
-        private INativeStructure _basicStructure;
-        private int _length;
-
         /// <summary>
         /// Initialize an empty buffer with desired length.
         /// </summary>
@@ -69,11 +66,9 @@ namespace RedSharp.Sys.Utils
         /// <exception cref="ArgumentException">If length is less then zero.</exception>
         public NativeBuffer(int length)
         {
-            ArgumentsGuard.ThrowIfLessZero(length);
+            Initialize(length * sizeof(TItem));
 
-            AllocateMemory(length * sizeof(TSructure));
-
-            _length = length;
+            Length = length;
         }
 
         /// <summary>
@@ -87,13 +82,9 @@ namespace RedSharp.Sys.Utils
         /// <exception cref="ArgumentException">If length is less then zero.</exception>
         public NativeBuffer(IntPtr pointer, int length, bool makeCopy = true)
         {
-            NativeGuard.ThrowIfNull(pointer);
-            ArgumentsGuard.ThrowIfLessZero(length);
+            Initialize(pointer, length * sizeof(TItem), makeCopy);
 
-            if (makeCopy)
-                CopyMemory(pointer, length * sizeof(TSructure));
-            else
-                SetMemory(pointer, length * sizeof(TSructure));
+            Length = length;
         }
 
         /// <summary>
@@ -121,43 +112,9 @@ namespace RedSharp.Sys.Utils
         /// <exception cref="ArgumentOutOfRangeException">If a new buffer is bigger than the basic structure.</exception>
         public NativeBuffer(INativeStructure basic, int offset, int length, bool makeCopy = true)
         {
-            ArgumentsGuard.ThrowIfNull(basic);
-            ArgumentsGuard.ThrowIfDisposed(basic);
-            ArgumentsGuard.ThrowIfLessZero(length);
+            Initialize(basic, offset, length * sizeof(TItem), makeCopy);
 
-            var targetPointer = basic.UnsafeHandle + offset;
-            var size = length * sizeof(TSructure);
-
-            NativeGuard.ThrowIfPointerIsOutOfRange(basic.UnsafeHandle, basic.Size, targetPointer, size, "computed pointer");
-
-            if (makeCopy)
-            {
-                CopyMemory(targetPointer, size);
-
-                //We don't need to hold a basic structure because we copied this thing.
-            }
-            else
-            {
-                SetMemory(targetPointer, size);
-
-                _basicStructure = basic;
-            }
-        }
-
-        /// <inheritdoc/>
-        /// <remarks>
-        /// If structure is created from other <see cref="INativeStructure"/> without coping 
-        /// then <see cref="IsDisposed"/> will be connected to the basic <see cref="INativeStructure"/>
-        /// </remarks>
-        public override bool IsDisposed
-        {
-            get
-            {
-                if (_basicStructure == null)
-                    return base.IsDisposed;
-                else
-                    return base.IsDisposed || _basicStructure.IsDisposed;
-            }
+            Length = length;
         }
 
         /// <summary>
@@ -168,16 +125,16 @@ namespace RedSharp.Sys.Utils
         /// </remarks>
         /// <exception cref="ObjectDisposedException"/>
         /// <exception cref="ArgumentOutOfRangeException">If you tries to get something outside of structure.</exception>
-        public ref TSructure this[int index]
+        public ref TItem this[int index]
         {
             get 
             {
                 ThrowIfDisposed();
 
-                if (index < 0 || index >= _length)
+                if (index < 0 || index >= Length)
                     throw new ArgumentOutOfRangeException(nameof(index));
 
-                return ref *(((TSructure*)_pointer) + index);
+                return ref *(((TItem*)UnsafeHandle.ToPointer()) + index);
             }
         }
 
@@ -187,46 +144,11 @@ namespace RedSharp.Sys.Utils
         /// <remarks>
         /// Do not confuse with size.
         /// </remarks>
-        /// <exception cref="ObjectDisposedException"/>
-        public int Length
-        {
-            get
-            {
-                ThrowIfDisposed();
-
-                return _length;
-            }
-        }
-
-        /// <summary>
-        /// Returns <see cref="Span{T}"/> structure with desired length (or with computed length).
-        /// </summary>
-        /// <remarks>
-        /// This is stupid remark but the LENGTH is not a SIZE.
-        /// <br/> This is a pretty UNSAFE method, because <see cref="Span{T}"/> can stay live after buffer disposing. 
-        /// Think twice before using it.
-        /// </remarks>
-        /// <exception cref="ObjectDisposedException"/>
-        /// <exception cref="ArgumentOutOfRangeException">If the length is outside of buffer.</exception>
-        public Span<TNSructure> AsSpanOf<TNSructure>(int? length = null) where TNSructure : unmanaged
-        {
-            ThrowIfDisposed();
-
-            if (length.HasValue)
-            {
-                if (length * sizeof(TNSructure) > Size)
-                    throw new ArgumentOutOfRangeException(nameof(length), "The desired length is more than the buffer size.");
-            }
-            else
-            {
-                length = Size / sizeof(TNSructure);
-            }
-
-            return new Span<TNSructure>(_pointer, length.Value);
-        }
+        public int Length { get; private set; }
 
         /// <inheritdoc/>
-        public IEnumerator<TSructure> GetEnumerator()
+        /// <exception cref="ObjectDisposedException"/>
+        public IEnumerator<TItem> GetEnumerator()
         {
             ThrowIfDisposed();
 
@@ -234,11 +156,12 @@ namespace RedSharp.Sys.Utils
         }
 
         /// <inheritdoc/>
+        /// <exception cref="ObjectDisposedException"/>
         IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 
         protected override void InternalDispose(bool manual)
         {
-            _basicStructure = null;
+            Length = 0;
 
             base.InternalDispose(manual);
         }
