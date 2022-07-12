@@ -51,5 +51,12 @@ namespace RedSharp.Sys.Helpers
             if (String.IsNullOrEmpty(value))
                 throw new ArgumentException(name, "String cannot be null or empty.");
         }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static void ThrowIfObjectDisposed(IDisposeIndication value, [CallerArgumentExpression("value")] String name = "value")
+        {
+            if (value.IsDisposed)
+                throw new ObjectDisposedException(name);
+        }
     }
 }
