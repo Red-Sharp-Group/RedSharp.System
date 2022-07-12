@@ -36,5 +36,19 @@ namespace RedSharp.Sys.Helpers
             if (start > value || value > end)
                 throw new ArgumentOutOfRangeException(name);
         }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static void ThrowIfNullOrEmpty(String value, [CallerArgumentExpression("value")] String name = "value")
+        {
+            if (String.IsNullOrEmpty(value))
+                throw new ArgumentException(name, "String cannot be null or empty.");
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static void ThrowIfNullOrEmpty<TItem>(IEnumerable<TItem> value, [CallerArgumentExpression("value")] String name = "value")
+        {
+            if (value == null || !value.Any())
+                throw new ArgumentException(name, "Collection cannot be null or empty.");
+        }
     }
 }
