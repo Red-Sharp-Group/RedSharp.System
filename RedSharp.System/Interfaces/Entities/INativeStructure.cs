@@ -14,6 +14,9 @@ namespace RedSharp.Sys.Interfaces.Entities
         /// <summary>
         /// Shows the real size of the wrapped structure, which can be less than your expectation.
         /// </summary>
+        /// <remarks>
+        /// Structure size is in bytes.
+        /// </remarks>
         int Size { get; }
     }
 }

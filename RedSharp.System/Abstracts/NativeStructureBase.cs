@@ -37,6 +37,13 @@ namespace RedSharp.Sys.Abstracts
                 throw new Exception(AlreadyHasAllocatedError);
         }
 
+        /// <inheritdoc cref="SetMemory(byte*, int)"/>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        protected void SetMemory(IntPtr pointer, int size)
+        {
+            SetMemory((byte*)(void*)pointer, size);
+        }
+
         /// <summary>
         /// Sets memory pointer.
         /// </summary>
@@ -86,6 +93,13 @@ namespace RedSharp.Sys.Abstracts
 
             Size = allocatedSize;
             IsHandleOwner = false;
+        }
+
+        /// <inheritdoc cref="CopyMemory(byte*, int)"/>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        protected void CopyMemory(IntPtr pointer, int size)
+        {
+            CopyMemory((byte*)(void*)pointer, size);
         }
 
         /// <summary>
@@ -145,6 +159,7 @@ namespace RedSharp.Sys.Abstracts
             NativeMemory.Free(pointer);
         }
 
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         protected String GetString(byte* pointer, int size, Encoding encoding)
         {
@@ -153,26 +168,8 @@ namespace RedSharp.Sys.Abstracts
             NativeGuard.ThrowIfNull(pointer);
             ArgumentsGuard.ThrowIfLessOrEqualZero(size);
             NativeGuard.ThrowIfPointerIsOutOfRange(_pointer, Size, pointer, size);
-            ArgumentsGuard.ThrowIfNull(encoding);
 
-            var step = encoding.GetByteCount("\0");
-            var realSize = 0;
-
-            for (; realSize < size; realSize += step)
-            {
-                var zerosCount = 0;
-
-                for (int i = realSize; i < realSize + step; i++)
-                {
-                    if (pointer[i] == 0)
-                        zerosCount++;
-                }
-
-                if (zerosCount == step)
-                    break;
-            }
-
-            return encoding.GetString(new Span<byte>(pointer, size));
+            return FixedBuffersHelper.GetString(pointer, size, encoding);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -183,15 +180,10 @@ namespace RedSharp.Sys.Abstracts
             NativeGuard.ThrowIfNull(pointer);
             ArgumentsGuard.ThrowIfLessOrEqualZero(size);
             NativeGuard.ThrowIfPointerIsOutOfRange(_pointer, Size, pointer, size);
-            ArgumentsGuard.ThrowIfNull(encoding);
 
-            var span = new Span<byte>(pointer, size);
-
-            if (String.IsNullOrWhiteSpace(value))
-                span.Fill(0);
-
-            encoding.GetBytes(value, span);
+            FixedBuffersHelper.SetString(pointer, size, encoding, value);
         }
+
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         protected TValue GetValue<TValue>(TValue* pointer) where TValue : unmanaged
@@ -214,6 +206,30 @@ namespace RedSharp.Sys.Abstracts
 
             *pointer = value;
         }
+
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        protected TItem[] GetArray<TItem>(TItem* pointer, int length) where TItem : unmanaged
+        {
+            ThrowIfDisposed();
+
+            NativeGuard.ThrowIfNull(pointer);
+            NativeGuard.ThrowIfPointerIsOutOfRange(_pointer, Size, pointer, length * sizeof(TItem));
+
+            return FixedBuffersHelper.GetArray(pointer, length);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        protected void SetArray<TItem>(TItem* pointer, int length, TItem[] array) where TItem : unmanaged
+        {
+            ThrowIfDisposed();
+
+            NativeGuard.ThrowIfNull(pointer);
+            NativeGuard.ThrowIfPointerIsOutOfRange(_pointer, Size, pointer, length * sizeof(TItem));
+
+            FixedBuffersHelper.SetArray(pointer, length, array);
+        }
+
 
         protected override void InternalDispose(bool manual)
         {
