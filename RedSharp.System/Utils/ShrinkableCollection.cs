@@ -99,7 +99,7 @@ namespace RedSharp.Sys.Utils
         public void CopyTo(TItem[] array, int arrayIndex)
         {
             ArgumentsGuard.ThrowIfNull(array);
-            ArgumentsGuard.ThrowIfNotInRange(arrayIndex, 0, array.Length - 1);
+            ArgumentsGuard.ThrowIfNotInRange(arrayIndex, FlexibleRanges.Create(array));
 
             if (ElementsCount > array.Length - arrayIndex)
                 throw new ArgumentException("Not enough space to copy the collection.", nameof(array));
