@@ -16,10 +16,7 @@ namespace RedSharp.Sys.Abstracts
     public abstract unsafe class NativeStructureBase : DisposableBase, INativeStructure
     {
         public const String AlreadyHasAllocatedError = "Memory is already allocated";
-        public const String OutOfStructureSizeError = "The method tries to access memory outside of the valid range.";
-        public const String MethodReturnedUnexpectedValueError = "Method returns an unexpected result.";
-
-        protected byte* _pointer;
+        public const String AllocateReturnedUnexpectedValueError = nameof(Allocate) + " - method returns an unexpected result.";
 
         /// <inheritdoc/>
         public int Size { get; private set; }
@@ -28,7 +25,7 @@ namespace RedSharp.Sys.Abstracts
         public bool IsHandleOwner { get; private set; }
 
         /// <inheritdoc/>
-        public IntPtr UnsafeHandle => new IntPtr(_pointer);
+        public IntPtr UnsafeHandle { get; private set; }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private void ThrowIfInitialized()
@@ -38,68 +35,43 @@ namespace RedSharp.Sys.Abstracts
         }
 
         /// <summary>
-        /// Sets memory pointer.
+        /// Allocates a new piece of memory by given size.
         /// </summary>
         /// <remarks>
-        /// <see cref="IsHandleOwner"/> will be false.
+        /// <see cref="IsHandleOwner"/> will be true.
         /// </remarks>
-        /// <exception cref="Exception">In case when you try to set pointer twice.</exception>
-        /// <exception cref="ArgumentNullException">If input pointer is null.</exception>
+        /// <exception cref="Exception">In case when you try to allocate memory twice.</exception>
         /// <exception cref="ArgumentOutOfRangeException">If input size is less of equal zero.</exception>
+        /// <exception cref="Exception">If <see cref="Allocate(int, out int)"/> returns an unexpected value.</exception>
         /// <exception cref="ObjectDisposedException">If object is disposed.</exception>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        protected void SetMemory(byte* pointer, int size)
+        protected virtual void Initialize(int size)
         {
             ThrowIfDisposed();
             ThrowIfInitialized();
 
-            NativeGuard.ThrowIfNull(pointer);
             ArgumentsGuard.ThrowIfLessOrEqualZero(size);
 
-            _pointer = pointer;
+            UnsafeHandle = Allocate(size);
+
+            if (UnsafeHandle == IntPtr.Zero)
+                throw new Exception(AllocateReturnedUnexpectedValueError);
+
             Size = size;
             IsHandleOwner = false;
         }
 
         /// <summary>
-        /// Creates a new piece of memory by given size.
+        /// Copies or Sets memory pointer.
         /// </summary>
         /// <remarks>
-        /// <see cref="IsHandleOwner"/> will be true.
+        /// This method is quite UNSAFE. Thinks twice before using it.
         /// </remarks>
-        /// <exception cref="Exception">In case when you try to allocate memory twice.</exception>
+        /// <exception cref="Exception">In case when you try to set pointer twice.</exception>
+        /// <exception cref="ArgumentNullException">If input pointer is null.</exception>
         /// <exception cref="ArgumentOutOfRangeException">If input size is less of equal zero.</exception>
-        /// <exception cref="Exception">If <see cref="Allocate(int, out int)"/> returns an unexpected value.</exception>
         /// <exception cref="ObjectDisposedException">If object is disposed.</exception>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        protected void AllocateMemory(int size)
-        {
-            ThrowIfDisposed();
-            ThrowIfInitialized();
-
-            ArgumentsGuard.ThrowIfLessOrEqualZero(size);
-
-            _pointer = Allocate(size, out int allocatedSize);
-
-            if (_pointer == null || allocatedSize <= 0)
-                throw new Exception($"{nameof(Allocate)} {MethodReturnedUnexpectedValueError}");
-
-            Size = allocatedSize;
-            IsHandleOwner = false;
-        }
-
-        /// <summary>
-        /// Creates a new piece of memory by given size and copies given data.
-        /// </summary>
-        /// <remarks>
-        /// <see cref="IsHandleOwner"/> will be true.
-        /// </remarks>
-        /// <exception cref="Exception">In case when you try to allocate memory twice.</exception>
-        /// <exception cref="ArgumentOutOfRangeException">If input size is less of equal zero.</exception>
         /// <exception cref="Exception">If <see cref="Allocate(int, out int)"/> returns an unexpected value.</exception>
-        /// <exception cref="ObjectDisposedException">If object is disposed.</exception>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        protected void CopyMemory(byte* pointer, int size)
+        protected virtual void Initialize(IntPtr pointer, int size, bool makeCopy = true)
         {
             ThrowIfDisposed();
             ThrowIfInitialized();
@@ -107,31 +79,77 @@ namespace RedSharp.Sys.Abstracts
             NativeGuard.ThrowIfNull(pointer);
             ArgumentsGuard.ThrowIfLessOrEqualZero(size);
 
-            _pointer = Allocate(size, out int allocatedSize);
+            if (makeCopy)
+            {
+                UnsafeHandle = pointer;
+                IsHandleOwner = false;
 
-            if (_pointer == null || allocatedSize <= 0)
-                throw new Exception($"{nameof(Allocate)} {MethodReturnedUnexpectedValueError}");
+                GC.SuppressFinalize(this);
+            }
+            else
+            {
+                UnsafeHandle = Allocate(size);
 
-            var inputSpan = new Span<byte>(pointer, allocatedSize);
-            var destinationSpan = new Span<byte>(_pointer, allocatedSize);
+                if (UnsafeHandle == IntPtr.Zero)
+                    throw new Exception(AllocateReturnedUnexpectedValueError);
 
-            inputSpan.CopyTo(destinationSpan);
+                var inputSpan = new Span<byte>(pointer.ToPointer(), size);
+                var destinationSpan = new Span<byte>(UnsafeHandle.ToPointer(), size);
 
-            Size = allocatedSize;
-            IsHandleOwner = false;
+                inputSpan.CopyTo(destinationSpan);
+
+                IsHandleOwner = true;
+            }
+
+            Size = size;
+        }
+
+        /// <summary>
+        /// Allocates new piece of memory and frees the previous one.
+        /// </summary>
+        /// <exception cref="ArgumentOutOfRangeException">If input size is less of equal zero.</exception>
+        /// <exception cref="ObjectDisposedException">If object is disposed.</exception>
+        /// <exception cref="Exception">If <see cref="Allocate(int, out int)"/> returns an unexpected value.</exception>
+        /// <exception cref="Exception">You try reinitialize the piece of memory without owner rights.</exception>
+        protected virtual void ReInitialize(int newSize)
+        {
+            ThrowIfDisposed();
+
+            if (!IsHandleOwner)
+                throw new Exception("This object is not an owner of memory handle.");
+
+            ArgumentsGuard.ThrowIfLessOrEqualZero(newSize);
+
+            var newHandle = Reallocate(UnsafeHandle, newSize);
+
+            if (newHandle == IntPtr.Zero)
+                throw new Exception(AllocateReturnedUnexpectedValueError);
+
+            UnsafeHandle = newHandle;
+            Size = newSize;
         }
 
         /// <summary>
         /// Has to allocate new piece of memory for this object.
         /// </summary>
         /// <param name="size">Needed size.</param>
-        /// <param name="allocatedSize">Actual size.</param>
         /// <returns>Pointer to the allocated memory</returns>
-        protected virtual byte* Allocate(int size, out int allocatedSize)
+        protected virtual IntPtr Allocate(int size)
         {
-            allocatedSize = size;
+            return new IntPtr(NativeMemory.AllocZeroed((nuint)size));
+        }
 
-            return (byte*)NativeMemory.AllocZeroed((nuint)size);
+        /// <summary>
+        /// Reallocating existing piece of memory to desired size.
+        /// </summary>
+        /// <remarks>
+        /// Algorithm guarantees that the pointer is valid. 
+        /// </remarks>
+        /// <param name="size">New size.</param>
+        /// <returns>Pointer to the allocated memory</returns>
+        protected virtual IntPtr Reallocate(IntPtr pointer, int size)
+        {
+            return new IntPtr(NativeMemory.Realloc(pointer.ToPointer(), (nuint)size));
         }
 
         /// <summary>
@@ -140,87 +158,17 @@ namespace RedSharp.Sys.Abstracts
         /// <remarks>
         /// Algorithm guarantees that the pointer is valid. 
         /// </remarks>
-        protected virtual void Free(byte* pointer)
+        protected virtual void Free(IntPtr pointer)
         {
-            NativeMemory.Free(pointer);
-        }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        protected String GetString(byte* pointer, int size, Encoding encoding)
-        {
-            ThrowIfDisposed();
-
-            NativeGuard.ThrowIfNull(pointer);
-            ArgumentsGuard.ThrowIfLessOrEqualZero(size);
-            NativeGuard.ThrowIfPointerIsOutOfRange(_pointer, Size, pointer, size);
-            ArgumentsGuard.ThrowIfNull(encoding);
-
-            var step = encoding.GetByteCount("\0");
-            var realSize = 0;
-
-            for (; realSize < size; realSize += step)
-            {
-                var zerosCount = 0;
-
-                for (int i = realSize; i < realSize + step; i++)
-                {
-                    if (pointer[i] == 0)
-                        zerosCount++;
-                }
-
-                if (zerosCount == step)
-                    break;
-            }
-
-            return encoding.GetString(new Span<byte>(pointer, size));
-        }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        protected void SetString(byte* pointer, int size, Encoding encoding, String value)
-        {
-            ThrowIfDisposed();
-
-            NativeGuard.ThrowIfNull(pointer);
-            ArgumentsGuard.ThrowIfLessOrEqualZero(size);
-            NativeGuard.ThrowIfPointerIsOutOfRange(_pointer, Size, pointer, size);
-            ArgumentsGuard.ThrowIfNull(encoding);
-
-            var span = new Span<byte>(pointer, size);
-
-            if (String.IsNullOrWhiteSpace(value))
-                span.Fill(0);
-
-            encoding.GetBytes(value, span);
-        }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        protected TValue GetValue<TValue>(TValue* pointer) where TValue : unmanaged
-        {
-            ThrowIfDisposed();
-
-            NativeGuard.ThrowIfNull(pointer);
-            NativeGuard.ThrowIfPointerIsOutOfRange(_pointer, Size, pointer, sizeof(TValue));
-
-            return *pointer;
-        }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        protected void SetValue<TValue>(TValue* pointer, TValue value) where TValue : unmanaged
-        {
-            ThrowIfDisposed();
-
-            NativeGuard.ThrowIfNull(pointer);
-            NativeGuard.ThrowIfPointerIsOutOfRange(_pointer, Size, pointer, sizeof(TValue));
-
-            *pointer = value;
+            NativeMemory.Free(pointer.ToPointer());
         }
 
         protected override void InternalDispose(bool manual)
         {
             if (IsHandleOwner)
-                Free(_pointer);
+                Free(UnsafeHandle);
 
-            _pointer = null;
+            UnsafeHandle = IntPtr.Zero;
             Size = 0;
 
             base.InternalDispose(manual);

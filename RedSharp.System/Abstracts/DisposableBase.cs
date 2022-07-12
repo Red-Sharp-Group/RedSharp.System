@@ -22,7 +22,7 @@ namespace RedSharp.Sys.Abstracts
         }
 
         /// <inheritdoc/>
-        public bool IsDisposed { get; private set; }
+        public virtual bool IsDisposed { get; private set; }
 
         /// <inheritdoc/>
         public void Dispose()

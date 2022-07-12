@@ -110,7 +110,7 @@ namespace RedSharp.Sys.Utils
         public void CopyTo(TItem[] array, int arrayIndex)
         {
             ArgumentsGuard.ThrowIfNull(array);
-            ArgumentsGuard.ThrowIfNotInRange(arrayIndex, 0, array.Length - 1);
+            ArgumentsGuard.ThrowIfNotInRange(arrayIndex, FlexibleRanges.Create(array));
 
             var tempCollection = new List<TItem>();
 
