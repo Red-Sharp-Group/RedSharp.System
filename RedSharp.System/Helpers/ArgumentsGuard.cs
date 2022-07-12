@@ -52,15 +52,31 @@ namespace RedSharp.Sys.Helpers
                 throw new ObjectDisposedException(name, $"The object {value.GetType().Name} is already disposed.");
         }
 
-
-        public static void ThrowIfNotType<TType>(ValueType value, [CallerArgumentExpression("value")] String name = "value")
+        /// <summary>
+        /// Throws an <see cref="ArgumentException"/> if the input object has wrong type.
+        /// </summary>
+        /// <remarks>
+        /// Method doesn't check object on null.
+        /// </remarks>
+        /// <exception cref="ObjectDisposedException"/>
+        public static void ThrowIfNotType<TType>(Object value, [CallerArgumentExpression("value")] String name = "value")
         {
             if (!(value is TType))
                 throw new ArgumentException(WrongObjectType, name);
         }
 
-        public static void ThrowIfNotType<TType>(Object value, [CallerArgumentExpression("value")] String name = "value")
+        /// <summary>
+        /// Throws an <see cref="ArgumentException"/> if the input object has wrong type.
+        /// <br/> Can return casted object as out parameter
+        /// </summary>
+        /// <remarks>
+        /// Method doesn't check object on null.
+        /// </remarks>
+        /// <exception cref="ObjectDisposedException"/>
+        public static void ThrowIfNotType<TType>(Object value, out TType casted, [CallerArgumentExpression("value")] String name = "value")
         {
+            casted = (TType)value;
+
             if (!(value is TType))
                 throw new ArgumentException(WrongObjectType, name);
         }
@@ -327,6 +343,10 @@ namespace RedSharp.Sys.Helpers
         //=========================================================================//
         //CHECK RANGE
 
+        /// <summary>
+        /// Throws an <see cref="ArgumentOutOfRangeException"/> if the input item is not in range.
+        /// </summary>
+        /// <exception cref="ArgumentOutOfRangeException"/>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static void ThrowIfNotInRange<TItem>(TItem value, FlexibleRange<TItem> range, [CallerArgumentExpression("value")] String name = "value")
         {
@@ -337,6 +357,10 @@ namespace RedSharp.Sys.Helpers
         //=========================================================================//
         //CHECK STRING STATE
 
+        /// <summary>
+        /// Throws an <see cref="ArgumentException"/> if the input string is null or empty.
+        /// </summary>
+        /// <exception cref="ArgumentException"/>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static void ThrowIfNullOrEmpty(String value, [CallerArgumentExpression("value")] String name = "value")
         {
