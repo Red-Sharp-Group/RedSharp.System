@@ -5,6 +5,10 @@ VisualStudioVersion = 16.0.31911.196
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RedSharp.System", "RedSharp.System\RedSharp.System.csproj", "{348616A2-59A9-4D28-8710-BB8A482519C0}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RedSharp.System.Collections", "RedSharp.System.Collections\RedSharp.System.Collections.csproj", "{FE2929B2-3906-47AA-AD4B-2512430BE8C6}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RedSharp.System.Native", "RedSharp.System.Native\RedSharp.System.Native.csproj", "{EBF5A616-2FC9-4C55-A738-6943BDA92B65}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +19,14 @@ Global
 		{348616A2-59A9-4D28-8710-BB8A482519C0}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{348616A2-59A9-4D28-8710-BB8A482519C0}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{348616A2-59A9-4D28-8710-BB8A482519C0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FE2929B2-3906-47AA-AD4B-2512430BE8C6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FE2929B2-3906-47AA-AD4B-2512430BE8C6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FE2929B2-3906-47AA-AD4B-2512430BE8C6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FE2929B2-3906-47AA-AD4B-2512430BE8C6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EBF5A616-2FC9-4C55-A738-6943BDA92B65}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EBF5A616-2FC9-4C55-A738-6943BDA92B65}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EBF5A616-2FC9-4C55-A738-6943BDA92B65}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EBF5A616-2FC9-4C55-A738-6943BDA92B65}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
