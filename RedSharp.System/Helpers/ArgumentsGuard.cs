@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Runtime.CompilerServices;
 using RedSharp.Sys.Interfaces.Shared;
 
@@ -349,11 +351,18 @@ namespace RedSharp.Sys.Helpers
                 throw new ArgumentException(name, "String cannot be null or empty.");
         }
 
+        //=========================================================================//
+        //CHECK COLLECTIONS STATE
+
+        /// <summary>
+        /// Throws an <see cref="ArgumentException"/> if the input collection is null or empty.
+        /// </summary>
+        /// <exception cref="ArgumentException"/>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static void ThrowIfObjectDisposed(IDisposeIndication value, [CallerArgumentExpression("value")] String name = "value")
+        public static void ThrowIfNullOrEmpty<TItem>(IEnumerable<TItem> value, [CallerArgumentExpression("value")] String name = "value")
         {
-            if (value.IsDisposed)
-                throw new ObjectDisposedException(name);
+            if (value == null || !value.Any())
+                throw new ArgumentException(name, "Collection cannot be null or empty.");
         }
     }
 }
