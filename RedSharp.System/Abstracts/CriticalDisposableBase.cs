@@ -27,6 +27,8 @@ namespace RedSharp.Sys.Abstracts
 
             SafeDisposed(true);
 
+            GC.SuppressFinalize(this);
+
             IsDisposed = true;
         }
 
