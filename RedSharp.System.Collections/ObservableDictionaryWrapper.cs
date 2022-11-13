@@ -6,6 +6,7 @@ using System.Collections.Specialized;
 using RedSharp.Sys.Collections.Abstracts;
 using RedSharp.Sys.Collections.Interfaces;
 using System.Collections;
+using RedSharp.Sys.Helpers;
 
 namespace RedSharp.Sys.Collections
 {
@@ -51,6 +52,22 @@ namespace RedSharp.Sys.Collections
 
         private InternalObservableCollectionWrapper<TKey> _keys;
         private InternalObservableCollectionWrapper<TValue> _values;
+
+        /// <summary>
+        /// Creates an instance of a <see cref="Dictionary{TKey, TValue}"/> as an internal collection.
+        /// </summary>
+        public ObservableDictionaryWrapper() : this(new Dictionary<TKey, TValue>())
+        { }
+
+        public ObservableDictionaryWrapper(Dictionary<TKey, TValue> internalCollection)
+        {
+            ArgumentsGuard.ThrowIfNull(internalCollection);
+
+            _internalCollection = internalCollection;
+
+            _keys = new InternalObservableCollectionWrapper<TKey>(_internalCollection.Keys);
+            _values = new InternalObservableCollectionWrapper<TValue>(_internalCollection.Values);
+        }
 
         /// <inheritdoc/>
         public TValue this[TKey key]
