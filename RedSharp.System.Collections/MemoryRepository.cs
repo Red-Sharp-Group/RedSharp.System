@@ -170,14 +170,14 @@ namespace RedSharp.Sys.Collections
         {
             IEnumerable<TItem> result = _collection.Values;
 
+            if (predicate != null)
+                result = result.Where(predicate.Compile());
+
             if (offset.HasValue)
                 result = result.Skip(offset.Value);
 
             if (limit.HasValue)
                 result = result.Take(limit.Value);
-
-            if (predicate != null)
-                result = result.Where(predicate.Compile());
 
             return result;
         }
