@@ -12,19 +12,18 @@ namespace RedSharp.Sys.Collections.Interfaces
         /// </summary>
         bool IsReadOnly { get; }
 
-
         /// <summary>
         /// Returns exact number of items on the invocation moment.
         /// <br/> If the parameter is null has to return total number of items.
         /// <br/> Uses <see cref="Expression"/> because it can be compiled into <see cref="Delegate"/> but otherwise - not.
         /// </summary>
-        int Count(Expression<Func<TItem, bool>> predicate = null);
+        int GetCount(Expression<Func<TItem, bool>> predicate = null);
 
-        /// <inheritdoc cref="Count"/>
+        /// <inheritdoc cref="GetCount"/>
         /// <remarks>
         /// Async version.
         /// </remarks>
-        ValueTask<int> CountAsync(Expression<Func<TItem, bool>> predicate = null, CancellationToken token = default);
+        ValueTask<int> GetCountAsync(Expression<Func<TItem, bool>> predicate = null, CancellationToken token = default);
 
 
         /// <summary>

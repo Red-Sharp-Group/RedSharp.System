@@ -6,19 +6,19 @@ using System.Threading.Tasks;
 
 namespace RedSharp.Sys.Abstracts
 {
-    public abstract class StrictComparableBase
+    public abstract class EqualityBase
     {
         public override bool Equals(object obj)
         {
-            return InternalEquals(this, obj as StrictComparableBase);
+            return InternalEquals(this, obj as EqualityBase);
         }
 
-        public static bool operator ==(StrictComparableBase first, StrictComparableBase second)
+        public static bool operator ==(EqualityBase first, EqualityBase second)
         {
             return InternalEquals(first, second);
         }
 
-        public static bool operator !=(StrictComparableBase first, StrictComparableBase second)
+        public static bool operator !=(EqualityBase first, EqualityBase second)
         {
             return !InternalEquals(first, second);
         }
@@ -30,7 +30,7 @@ namespace RedSharp.Sys.Abstracts
                        .GetHashCode();
         }
 
-        private static bool InternalEquals(StrictComparableBase first, StrictComparableBase second)
+        private static bool InternalEquals(EqualityBase first, EqualityBase second)
         {
             if (Object.ReferenceEquals(first, second))
                 return true;
@@ -40,6 +40,6 @@ namespace RedSharp.Sys.Abstracts
                 return false;
         }
 
-        protected abstract bool CompareTo(StrictComparableBase another);
+        protected abstract bool CompareTo(EqualityBase another);
     }
 }

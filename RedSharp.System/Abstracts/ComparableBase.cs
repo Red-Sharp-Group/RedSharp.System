@@ -2,41 +2,41 @@
 
 namespace RedSharp.Sys.Abstracts
 {
-    public abstract class WideComparableBase : IComparable
+    public abstract class ComparableBase : IComparable
     {
         public override bool Equals(object obj)
         {
-            return InternalEquals(this, obj as WideComparableBase) == 0;
+            return InternalEquals(this, obj as ComparableBase) == 0;
         }
 
-        public static bool operator ==(WideComparableBase first, WideComparableBase second)
+        public static bool operator ==(ComparableBase first, ComparableBase second)
         {
             return InternalEquals(first, second) == 0;
         }
 
-        public static bool operator !=(WideComparableBase first, WideComparableBase second)
+        public static bool operator !=(ComparableBase first, ComparableBase second)
         {
             return InternalEquals(first, second) != 0;
         }
 
-        public static bool operator >(WideComparableBase first, WideComparableBase second)
+        public static bool operator >(ComparableBase first, ComparableBase second)
         {
             return InternalEquals(first, second) == 1;
         }
 
-        public static bool operator <(WideComparableBase first, WideComparableBase second)
+        public static bool operator <(ComparableBase first, ComparableBase second)
         {
             return InternalEquals(first, second) == -1;
         }
 
-        public static bool operator >=(WideComparableBase first, WideComparableBase second)
+        public static bool operator >=(ComparableBase first, ComparableBase second)
         {
             var result = InternalEquals(first, second);
 
             return result == 1 || result == 0;
         }
 
-        public static bool operator <=(WideComparableBase first, WideComparableBase second)
+        public static bool operator <=(ComparableBase first, ComparableBase second)
         {
             var result = InternalEquals(first, second);
 
@@ -52,7 +52,7 @@ namespace RedSharp.Sys.Abstracts
 
         int IComparable.CompareTo(object obj)
         {
-            var another = obj as WideComparableBase;
+            var another = obj as ComparableBase;
 
             if (another == null)
                 return 1;
@@ -60,7 +60,7 @@ namespace RedSharp.Sys.Abstracts
             return CompareTo(another);
         }
 
-        private static int InternalEquals(WideComparableBase first, WideComparableBase second)
+        private static int InternalEquals(ComparableBase first, ComparableBase second)
         {
             if (Object.ReferenceEquals(first, second))
                 return 0;
@@ -72,6 +72,6 @@ namespace RedSharp.Sys.Abstracts
                 return first.CompareTo(second);
         }
 
-        protected abstract int CompareTo(WideComparableBase another);
+        protected abstract int CompareTo(ComparableBase another);
     }
 }

@@ -6,6 +6,7 @@ using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using RedSharp.Sys.Collections.Helpers;
 using RedSharp.Sys.Collections.Interfaces;
 using RedSharp.Sys.Helpers;
 
@@ -24,12 +25,9 @@ namespace RedSharp.Sys.Collections
         /// <inheritdoc/>
         public bool IsReadOnly { get; private set; }
 
-        /// <inheritdoc/>
-        public TItem this[TIdentifier identifier] => GetByIdentifier(identifier);
-
 
         /// <inheritdoc/>
-        public int Count(Expression<Func<TItem, bool>> predicate = null)
+        public int GetCount(Expression<Func<TItem, bool>> predicate = null)
         {
             if (predicate == null)
                 return _collection.Count;
@@ -38,11 +36,11 @@ namespace RedSharp.Sys.Collections
         }
 
         /// <inheritdoc/>
-        public ValueTask<int> CountAsync(Expression<Func<TItem, bool>> predicate = null, CancellationToken token = default)
+        public ValueTask<int> GetCountAsync(Expression<Func<TItem, bool>> predicate = null, CancellationToken token = default)
         {
             token.ThrowIfCancellationRequested();
 
-            return ValueTask.FromResult(Count(predicate));
+            return ValueTask.FromResult(GetCount(predicate));
         }
 
 
@@ -174,10 +172,18 @@ namespace RedSharp.Sys.Collections
                 result = result.Where(predicate.Compile());
 
             if (offset.HasValue)
+            {
+                ArgumentsGuard.ThrowIfLessZero(offset.Value);
+
                 result = result.Skip(offset.Value);
+            }
 
             if (limit.HasValue)
+            {
+                ArgumentsGuard.ThrowIfLessOrEqualZero(limit.Value);
+
                 result = result.Take(limit.Value);
+            }
 
             return result;
         }

@@ -5,6 +5,7 @@ using System.Runtime.CompilerServices;
 using System.Collections.Specialized;
 using RedSharp.Sys.Collections.Abstracts;
 using RedSharp.Sys.Collections.Interfaces;
+using System.Collections;
 
 namespace RedSharp.Sys.Collections
 {
@@ -17,7 +18,7 @@ namespace RedSharp.Sys.Collections
     /// <br/>Also, I have to warn you that this is a wrapper object with an additional functionality,
     /// so it may require more actions to do the same things.
     /// </remarks>
-    public class ObservableDictionaryWrapper<TKey, TValue> : ObservableEnumerableBase<KeyValuePair<TKey, TValue>>, IObservableDictionary<TKey, TValue>
+    public class ObservableDictionaryWrapper<TKey, TValue> : NotifiableCollectionBase<KeyValuePair<TKey, TValue>>, IObservableDictionary<TKey, TValue>
     {
         /// <summary>
         /// Special collection that allows to raise events from outside.
@@ -67,8 +68,11 @@ namespace RedSharp.Sys.Collections
                 {
                     var oldItem = _internalCollection[key];
 
+                    RaiseKeyChanging(key);
+
                     _internalCollection[key] = value;
 
+                    RaiseKeyChanged(key);
                     RaiseReplacing(new KeyValuePair<TKey, TValue>(key, oldItem), new KeyValuePair<TKey, TValue>(key, value));
 
                     _values.InternalRaiseReplacing(oldItem, value);
@@ -236,7 +240,15 @@ namespace RedSharp.Sys.Collections
             RaisePropertyChanged(nameof(Count));
         }
 
-        public override IEnumerator<KeyValuePair<TKey, TValue>> GetEnumerator()
+
+        /// <inheritdoc/>
+        public IEnumerator<KeyValuePair<TKey, TValue>> GetEnumerator()
+        {
+            return _internalCollection.GetEnumerator();
+        }
+
+        /// <inheritdoc/>
+        IEnumerator IEnumerable.GetEnumerator()
         {
             return _internalCollection.GetEnumerator();
         }

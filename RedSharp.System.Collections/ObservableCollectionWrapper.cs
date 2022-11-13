@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using RedSharp.Sys.Collections.Abstracts;
@@ -14,7 +15,7 @@ namespace RedSharp.Sys.Collections
     /// I have to warn you that this is a wrapper object with an additional functionality,
     /// so it may require more actions to do the same things.
     /// </remarks>
-    public class ObservableCollectionWrapper<TItem> : ObservableEnumerableBase<TItem>, IObservableCollection<TItem>
+    public class ObservableCollectionWrapper<TItem> : NotifiableCollectionBase<TItem>, IObservableCollection<TItem>
     {
         private ICollection<TItem> _internalCollection;
 
@@ -88,7 +89,13 @@ namespace RedSharp.Sys.Collections
         }
 
         /// <inheritdoc/>
-        public override IEnumerator<TItem> GetEnumerator()
+        public IEnumerator<TItem> GetEnumerator()
+        {
+            return _internalCollection.GetEnumerator();
+        }
+
+        /// <inheritdoc/>
+        IEnumerator IEnumerable.GetEnumerator()
         {
             return _internalCollection.GetEnumerator();
         }

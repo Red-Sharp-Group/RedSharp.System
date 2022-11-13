@@ -5,6 +5,7 @@ using System.Collections.Specialized;
 using RedSharp.Sys.Collections.Abstracts;
 using RedSharp.Sys.Collections.Interfaces;
 using RedSharp.Sys.Helpers;
+using System.Collections;
 
 namespace RedSharp.Sys.Collections
 {
@@ -17,7 +18,7 @@ namespace RedSharp.Sys.Collections
     /// <br/>Also, I have to warn you that this is a wrapper object with an additional functionality,
     /// so it may require more actions to do the same things.
     /// </remarks>
-    public class ObservableSetWrapper<TItem> : ObservableEnumerableBase<TItem>, IObservableSet<TItem>
+    public class ObservableSetWrapper<TItem> : NotifiableCollectionBase<TItem>, IObservableSet<TItem>
     {
         private ISet<TItem> _internalCollection;
 
@@ -206,7 +207,14 @@ namespace RedSharp.Sys.Collections
             RaiseAdding(newItems);
         }
 
-        public override IEnumerator<TItem> GetEnumerator()
+        /// <inheritdoc/>
+        public IEnumerator<TItem> GetEnumerator()
+        {
+            return _internalCollection.GetEnumerator();
+        }
+
+        /// <inheritdoc/>
+        IEnumerator IEnumerable.GetEnumerator()
         {
             return _internalCollection.GetEnumerator();
         }

@@ -12,8 +12,11 @@ using RedSharp.Sys.Collections.Interfaces;
 
 namespace RedSharp.Sys.Collections.Abstracts
 {
-    public abstract class ObservableEnumerableBase<TItem> : IObservableEnumerable<TItem>, INotifyPropertyChanging, INotifyPropertyChanged
+    public abstract class NotifiableCollectionBase<TItem> : INotifyCollectionChanged, INotifyPropertyChanging, INotifyPropertyChanged
     {
+        private const string IndexerProperty = "Item[]";
+        private const string IndexerPropertyFormat = "Item[{0}]";
+
         /// <inheritdoc/>
         public event NotifyCollectionChangedEventHandler CollectionChanged;
 
@@ -24,12 +27,6 @@ namespace RedSharp.Sys.Collections.Abstracts
 
         /// <inheritdoc/>
         public event PropertyChangedEventHandler PropertyChanged;
-
-        //This is the only case when I actually want this thing to be implemented in the interface by default
-        IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
-
-        /// <inheritdoc/> 
-        public abstract IEnumerator<TItem> GetEnumerator();
 
         /// <summary>
         /// Invokes a <see cref="CollectionChanged"/>.
@@ -120,6 +117,7 @@ namespace RedSharp.Sys.Collections.Abstracts
         /// <remarks>
         /// Raises in the try {..} catch {..} statements.
         /// </remarks>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         protected void RaisePropertyChanging([CallerMemberName] String name = null)
         {
             if (PropertyChanging == null)
@@ -139,11 +137,23 @@ namespace RedSharp.Sys.Collections.Abstracts
         }
 
         /// <summary>
+        /// Invokes a <see cref="PropertyChanging"/> for the indexer.
+        /// </summary>
+        protected void RaiseKeyChanging(object key = null)
+        {
+            if (key != null && key is string)
+                RaisePropertyChanging(String.Format(IndexerPropertyFormat, key));
+
+            RaisePropertyChanging(IndexerProperty);
+        }
+
+        /// <summary>
         /// Invokes a <see cref="PropertyChanged"/> for the input property name.
         /// </summary>
         /// <remarks>
         /// Raises in the try {..} catch {..} statements.
         /// </remarks>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         protected void RaisePropertyChanged([CallerMemberName] String name = null)
         {
             if (PropertyChanged == null)
@@ -160,6 +170,17 @@ namespace RedSharp.Sys.Collections.Abstracts
                 Trace.WriteLine(exception.Message);
                 Trace.WriteLine(exception.StackTrace);
             }
+        }
+
+        /// <summary>
+        /// Invokes a <see cref="PropertyChanged"/> for the indexer.
+        /// </summary>
+        protected void RaiseKeyChanged(object key = null)
+        {
+            if (key != null && key is string)
+                RaisePropertyChanged(String.Format(IndexerPropertyFormat, key));
+
+            RaisePropertyChanged(IndexerProperty);
         }
     }
 }

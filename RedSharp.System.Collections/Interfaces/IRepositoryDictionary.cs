@@ -20,15 +20,6 @@ namespace RedSharp.Sys.Collections.Interfaces
     public interface IRepositoryDictionary<TIdentifier, TItem> : IRepositoryCollection<TItem> where TItem : IRepositoryItem<TIdentifier>
     {
         /// <summary>
-        /// Basically, this is <see cref="GetByIdentifier"/> in form of indexer.
-        /// </summary>
-        /// <remarks>
-        /// And yeah, it will execute synchronously.
-        /// </remarks>
-        public TItem this[TIdentifier identifier] { get; }
-
-
-        /// <summary>
         /// Returns first item with correspond identifier or default.
         /// </summary>
         TItem GetByIdentifier(TIdentifier identifier);
