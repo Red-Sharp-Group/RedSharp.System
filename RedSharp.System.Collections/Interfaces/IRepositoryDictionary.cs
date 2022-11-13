@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
+using RedSharp.Sys.Interfaces.Shared;
 
 namespace RedSharp.Sys.Collections.Interfaces
 {
@@ -9,7 +10,7 @@ namespace RedSharp.Sys.Collections.Interfaces
     /// without constructions like <see cref="KeyValuePair{TIdentifier, TItem}"/>
     /// </summary>
     /// <typeparam name="TIdentifier"></typeparam>
-    public interface IRepositoryItem<TIdentifier>
+    public interface IRepositoryItem<TIdentifier> : IReadableIndication
     {
         /// <summary>
         /// Item identifier.

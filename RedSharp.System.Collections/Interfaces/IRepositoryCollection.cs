@@ -2,16 +2,12 @@
 using System.Linq.Expressions;
 using System.Threading;
 using System.Threading.Tasks;
+using RedSharp.Sys.Interfaces.Shared;
 
 namespace RedSharp.Sys.Collections.Interfaces
 {
-    public interface IRepositoryCollection<TItem> : IRepositoryEnumerable<TItem>
+    public interface IRepositoryCollection<TItem> : IRepositoryEnumerable<TItem>, IReadableIndication where TItem : IReadableIndication
     {
-        /// <summary>
-        /// True if the repository supports add, update, remove operations.
-        /// </summary>
-        bool IsReadOnly { get; }
-
         /// <summary>
         /// Returns exact number of items on the invocation moment.
         /// <br/> If the parameter is null has to return total number of items.

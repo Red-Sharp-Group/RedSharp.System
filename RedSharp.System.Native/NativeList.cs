@@ -3,11 +3,12 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using RedSharp.Sys.Helpers;
+using RedSharp.Sys.Interfaces.Shared;
 using RedSharp.Sys.Native.Abstracts;
 
 namespace RedSharp.Sys.Native
 {
-    public unsafe class NativeList<TItem> : NativeStructureBase, IList<TItem> where TItem : unmanaged
+    public unsafe class NativeList<TItem> : NativeStructureBase, IList<TItem>, IReadableIndication where TItem : unmanaged
     {
         /// <summary>
         /// Just to have an ability to LINQ this thing.

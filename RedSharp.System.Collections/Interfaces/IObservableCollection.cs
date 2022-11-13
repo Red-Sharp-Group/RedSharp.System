@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using RedSharp.Sys.Interfaces.Shared;
 
 namespace RedSharp.Sys.Collections.Interfaces
 {
@@ -13,6 +14,6 @@ namespace RedSharp.Sys.Collections.Interfaces
     /// <remarks>
     /// The property <see cref="IObservableCollection{T}.Count"/> can be observed.
     /// </remarks>
-    public interface IObservableCollection<TItem> : ICollection<TItem>, IObservableEnumerable<TItem>, INotifyPropertyChanging, INotifyPropertyChanged
+    public interface IObservableCollection<TItem> : ICollection<TItem>, IObservableEnumerable<TItem>, INotifyPropertyChanging, INotifyPropertyChanged, IReadableIndication
     { }
 }
