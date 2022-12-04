@@ -27,7 +27,7 @@ namespace RedSharp.Sys.Collections.Utils
                 _range = set.Range;
                 _sidesEquality = _range.Comparer.Compare(_range.Left, _range.Right);
 
-                if (_sidesEquality == ComparerBase<TItem>.Equal)
+                if (_sidesEquality == 0)
                     throw new Exception("Cannot enumerate range when left and right sides are equal.");
 
                 _started = false;
@@ -61,7 +61,7 @@ namespace RedSharp.Sys.Collections.Utils
                 var compareResult = _range.Comparer.Compare(Current, _range.Right);
 
                 if (_range.IsRightStrictly)
-                    return compareResult == ComparerBase<TItem>.Equal || compareResult == _sidesEquality;
+                    return compareResult == 0 || compareResult == _sidesEquality;
                 else
                     return compareResult == _sidesEquality;
             }

@@ -5,21 +5,21 @@ namespace RedSharp.Sys.Collections.Utils
 {
     public class DoubleComparer : ComparerBase<double>
     {
-        public DoubleComparer(double approximationValue)
+        public DoubleComparer(double approximationValue, bool isAscending = true) : base(isAscending)
         {
             ApproximationValue = approximationValue;
         }
 
         public double ApproximationValue { get; private set;}
 
-        public override int Compare(double first, double second)
+        protected override int InternalCompare(double first, double second)
         {
             if (Math.Abs(first - second) < ApproximationValue)
-                return Equal;
+                return 0;
             else if (first > second)
-                return Greater;
+                return 1;
             else
-                return Less;
+                return -1;
         }
     }
 }
