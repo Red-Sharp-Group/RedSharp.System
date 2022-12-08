@@ -24,7 +24,7 @@ namespace RedSharp.Sys.Collections.Utils
 
             Comparer = comparer;
 
-            if (Comparer.Compare(Left, Right) == ComparerBase<TItem>.Equal)
+            if (Comparer.Compare(Left, Right) == 0)
                 throw new Exception("Cannot create range when left and right sides are equal.");
         }
 
@@ -68,22 +68,22 @@ namespace RedSharp.Sys.Collections.Utils
             bool rightResult;
             bool leftResult;
 
-            if (sidesEquality == ComparerBase<TItem>.Less)
+            if (sidesEquality < 0)
             {
-                leftResult = leftEquality == ComparerBase<TItem>.Greater;
-                rightResult = rightEquality == ComparerBase<TItem>.Less;
+                leftResult = leftEquality > 0;
+                rightResult = rightEquality < 0;
             }
             else
             {
-                leftResult = leftEquality == ComparerBase<TItem>.Less;
-                rightResult = rightEquality == ComparerBase<TItem>.Greater;
+                leftResult = leftEquality < 0;
+                rightResult = rightEquality > 0;
             }
 
             if (IsLeftStrictly)
-                leftResult = leftResult || leftEquality == ComparerBase<TItem>.Equal;
+                leftResult = leftResult || leftEquality == 0;
 
             if (IsRightStrictly)
-                rightResult = rightResult || rightEquality == ComparerBase<TItem>.Equal;
+                rightResult = rightResult || rightEquality == 0;
 
             return leftResult && rightResult;
         }

@@ -65,9 +65,12 @@ namespace RedSharp.Sys.Collections.Abstracts
         /// <remarks>
         /// Currently I don't know a collection that can add a range by specific index, so I do not use it for this case.
         /// </remarks>
-        protected void RaiseAdding(IEnumerable<TItem> items)
+        protected void RaiseAdding(IList<TItem> items, int? index = null)
         {
-            RaiseCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Add, items));
+            if (index.HasValue)
+                RaiseCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Add, (IList)items, index.Value));
+            else
+                RaiseCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Add, (IList)items));
         }
 
         /// <summary>
@@ -98,9 +101,12 @@ namespace RedSharp.Sys.Collections.Abstracts
         /// <remarks>
         /// Currently I don't know a collection that can remove a range by specific index, so I do not use it for this case.
         /// </remarks>
-        protected void RaiseRemoving(IEnumerable<TItem> items)
+        protected void RaiseRemoving(IList<TItem> items, int? index = null)
         {
-            RaiseCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Remove, items));
+            if (index.HasValue)
+                RaiseCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Remove, (IList)items, index.Value));
+            else
+                RaiseCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Remove, (IList)items));
         }
 
         /// <summary>
