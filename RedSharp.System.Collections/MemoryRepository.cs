@@ -12,14 +12,20 @@ using RedSharp.Sys.Helpers;
 
 namespace RedSharp.Sys.Collections
 {
-    public class MemoryRepository<TIdentifier, TItem> : IRepositoryDictionary<TIdentifier, TItem> where TItem : IRepositoryItem<TIdentifier>
+    public class MemoryRepository<TIdentifier, TItem> : IRepository<TIdentifier, TItem>
     {
         private IDictionary<TIdentifier, TItem> _collection;
+        private Func<TItem, TIdentifier> _identifierGetter;
 
-        public MemoryRepository(IDictionary<TIdentifier, TItem> collection, bool isReadOnly = true)
+        public MemoryRepository(IDictionary<TIdentifier, TItem> collection, bool isReadOnly = true, Func<TItem, TIdentifier> identifierGetter = null)
         {
             _collection = collection;
             IsReadOnly = isReadOnly;
+
+            if (!isReadOnly)
+                ArgumentsGuard.ThrowIfNull(identifierGetter);
+
+            _identifierGetter = identifierGetter;
         }
 
         /// <inheritdoc/>
@@ -27,7 +33,7 @@ namespace RedSharp.Sys.Collections
 
 
         /// <inheritdoc/>
-        public int GetCount(Expression<Func<TItem, bool>> predicate = null)
+        public int Count(Expression<Func<TItem, bool>> predicate = null)
         {
             if (predicate == null)
                 return _collection.Count;
@@ -36,11 +42,11 @@ namespace RedSharp.Sys.Collections
         }
 
         /// <inheritdoc/>
-        public ValueTask<int> GetCountAsync(Expression<Func<TItem, bool>> predicate = null, CancellationToken token = default)
+        public ValueTask<int> CountAsync(Expression<Func<TItem, bool>> predicate = null, CancellationToken token = default)
         {
             token.ThrowIfCancellationRequested();
 
-            return ValueTask.FromResult(GetCount(predicate));
+            return ValueTask.FromResult(Count(predicate));
         }
 
 
@@ -50,7 +56,7 @@ namespace RedSharp.Sys.Collections
             ThrowIfReadOnly();
             ArgumentsGuard.ThrowIfNull(item);
 
-            _collection.Add(item.Identifier, item);
+            _collection.Add(_identifierGetter.Invoke(item), item);
         }
 
         /// <inheritdoc/>
@@ -65,7 +71,7 @@ namespace RedSharp.Sys.Collections
 
 
         /// <inheritdoc/>
-        public TItem GetByIdentifier(TIdentifier identifier)
+        public TItem Get(TIdentifier identifier)
         {
             ArgumentsGuard.ThrowIfNull(identifier);
 
@@ -73,31 +79,16 @@ namespace RedSharp.Sys.Collections
         }
 
         /// <inheritdoc/>
-        public ValueTask<TItem> GetByIdentifierAsync(TIdentifier identifier, CancellationToken token = default)
+        public ValueTask<TItem> GetAsync(TIdentifier identifier, CancellationToken token = default)
         {
             token.ThrowIfCancellationRequested();
 
-            return ValueTask.FromResult(GetByIdentifier(identifier));
+            return ValueTask.FromResult(Get(identifier));
         }
 
 
         /// <inheritdoc/>
-        public bool Contains(TItem item)
-        {
-            ArgumentsGuard.ThrowIfNull(item);
-
-            return ContainsIdentifier(item.Identifier);
-        }
-
-        /// <inheritdoc/>
-        public ValueTask<bool> ContainsAsync(TItem item, CancellationToken token = default)
-        {
-            return ContainsIdentifierAsync(item.Identifier, token);
-        }
-
-
-        /// <inheritdoc/>
-        public bool ContainsIdentifier(TIdentifier identifier)
+        public bool Contains(TIdentifier identifier)
         {
             ArgumentsGuard.ThrowIfNull(identifier);
 
@@ -105,11 +96,11 @@ namespace RedSharp.Sys.Collections
         }
 
         /// <inheritdoc/>
-        public ValueTask<bool> ContainsIdentifierAsync(TIdentifier identifier, CancellationToken token = default)
+        public ValueTask<bool> ContainsAsync(TIdentifier identifier, CancellationToken token = default)
         {
             token.ThrowIfCancellationRequested();
 
-            return ValueTask.FromResult(ContainsIdentifier(identifier));
+            return ValueTask.FromResult(Contains(identifier));
         }
 
 
@@ -131,23 +122,7 @@ namespace RedSharp.Sys.Collections
 
 
         /// <inheritdoc/>
-        public bool Remove(TItem item)
-        {
-            ThrowIfReadOnly();
-            ArgumentsGuard.ThrowIfNull(item);
-
-            return RemoveByIdentifier(item.Identifier);
-        }
-
-        /// <inheritdoc/>
-        public ValueTask<bool> RemoveAsync(TItem item, CancellationToken token = default)
-        {
-            return RemoveByIdentifierAsync(item.Identifier);
-        }
-
-
-        /// <inheritdoc/>
-        public bool RemoveByIdentifier(TIdentifier identifier)
+        public bool Remove(TIdentifier identifier)
         {
             ThrowIfReadOnly();
             ArgumentsGuard.ThrowIfNull(identifier);
@@ -156,7 +131,7 @@ namespace RedSharp.Sys.Collections
         }
 
         /// <inheritdoc/>
-        public ValueTask<bool> RemoveByIdentifierAsync(TIdentifier identifier, CancellationToken token = default)
+        public ValueTask<bool> RemoveAsync(TIdentifier identifier, CancellationToken token = default)
         {
             token.ThrowIfCancellationRequested();
 
