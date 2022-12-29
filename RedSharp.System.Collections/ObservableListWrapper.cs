@@ -15,7 +15,7 @@ namespace RedSharp.Sys.Collections
     /// I have to warn you that this is a wrapper object with an additional functionality,
     /// so it may require more actions to do the same things.
     /// </remarks>
-    public class ObservableListWrapper<TItem> : NotifiableCollectionBase<TItem>, IObservableList<TItem>
+    public class ObservableListWrapper<TItem> : NotifyingCollectionBase<TItem>, IObservableList<TItem>
     {
         private IList<TItem> _internalCollection;
 

@@ -12,7 +12,7 @@ using RedSharp.Sys.Collections.Interfaces;
 
 namespace RedSharp.Sys.Collections.Abstracts
 {
-    public abstract class NotifiableCollectionBase<TItem> : INotifyCollectionChanged, INotifyPropertyChanging, INotifyPropertyChanged
+    public abstract class NotifyingCollectionBase<TItem> : INotifyCollectionChanged, INotifyPropertyChanging, INotifyPropertyChanged
     {
         private const string IndexerProperty = "Item[]";
         private const string IndexerPropertyFormat = "Item[{0}]";

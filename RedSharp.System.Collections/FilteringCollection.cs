@@ -8,7 +8,7 @@ using RedSharp.Sys.Helpers;
 
 namespace RedSharp.Sys.Collections
 {
-    public class FilteringCollection<TItem, TFilter> : NotifiableWrapperBase<TItem, TItem>, IReadOnlyCollection<TItem>
+    public class FilteringCollection<TItem, TFilter> : NotifyingWrapperBase<TItem, TItem>, IReadOnlyCollection<TItem>
     {
         private class FilteringCollectionEnumerator : IEnumerator<TItem>
         {

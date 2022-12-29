@@ -8,7 +8,7 @@ using RedSharp.Sys.Helpers;
 
 namespace RedSharp.Sys.Collections
 {
-    public class SortingCollection<TItem> : NotifiableWrapperBase<TItem, TItem>, IReadOnlyCollection<TItem>
+    public class SortingCollection<TItem> : NotifyingWrapperBase<TItem, TItem>, IReadOnlyCollection<TItem>
     {
         private class ItemBuiltInComparer<TImplementation> : ComparerBase<TImplementation>
         {

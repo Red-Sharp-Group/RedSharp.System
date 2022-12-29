@@ -5,7 +5,7 @@ using RedSharp.Sys.Helpers;
 
 namespace RedSharp.Sys.Collections.Abstracts
 {
-    public abstract class NotifiableWrapperBase<TInput, TOutput> : NotifiableCollectionBase<TOutput>
+    public abstract class NotifyingWrapperBase<TInput, TOutput> : NotifyingCollectionBase<TOutput>
     {
         private IEnumerable<TInput> _originalCollection;
 

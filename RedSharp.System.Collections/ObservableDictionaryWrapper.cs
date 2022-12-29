@@ -19,7 +19,7 @@ namespace RedSharp.Sys.Collections
     /// <br/>Also, I have to warn you that this is a wrapper object with an additional functionality,
     /// so it may require more actions to do the same things.
     /// </remarks>
-    public class ObservableDictionaryWrapper<TKey, TValue> : NotifiableCollectionBase<KeyValuePair<TKey, TValue>>, IObservableDictionary<TKey, TValue>
+    public class ObservableDictionaryWrapper<TKey, TValue> : NotifyingCollectionBase<KeyValuePair<TKey, TValue>>, IObservableDictionary<TKey, TValue>
     {
         /// <summary>
         /// Special collection that allows to raise events from outside.

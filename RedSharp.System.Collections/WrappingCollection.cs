@@ -7,7 +7,7 @@ using RedSharp.Sys.Helpers;
 
 namespace RedSharp.Sys.Collections
 {
-    public class WrappingCollection<TInput, TOutput> : NotifiableWrapperBase<TInput, TOutput>, IReadOnlyCollection<TOutput>
+    public class WrappingCollection<TInput, TOutput> : NotifyingWrapperBase<TInput, TOutput>, IReadOnlyCollection<TOutput>
     {
         private class WrappingCollectionEnumerator : IEnumerator<TOutput>
         {
