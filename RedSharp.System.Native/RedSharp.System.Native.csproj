@@ -16,7 +16,7 @@
   <Import Project="$(ProjectDir)..\Definitions.props" />
 
   <ItemGroup>
-    <ProjectReference Include="..\RedSharp.System\RedSharp.System.csproj" />
+    <ProjectReference Include="$(ProjectDir)..\RedSharp.System\RedSharp.System.csproj" />
   </ItemGroup>
 
 </Project>

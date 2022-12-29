@@ -1,10 +1,11 @@
 ﻿using System;
+using System.Linq;
 using System.Linq.Expressions;
+using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using RedSharp.Sys.Interfaces.Shared;
 
-namespace RedSharp.Sys.Collections.Interfaces
+namespace RedSharp.Sys.Repositories.Interfaces
 {
     public interface IReadOnlyRepository<TIdentifier, TItem> : IEnumerableRepository<TItem>
     {
@@ -18,6 +19,18 @@ namespace RedSharp.Sys.Collections.Interfaces
         /// Async version.
         /// </remarks>
         ValueTask<TItem> GetAsync(TIdentifier identifier, CancellationToken token = default);
+
+
+        /// <summary>
+        /// Returns exact number of items on the invocation moment.
+        /// </summary>
+        int Count();
+
+        /// <inheritdoc cref="GetCount"/>
+        /// <remarks>
+        /// Async version.
+        /// </remarks>
+        ValueTask<int> CountAsync(CancellationToken token = default);
 
 
         /// <summary>

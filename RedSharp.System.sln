@@ -9,6 +9,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RedSharp.System.Collections
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RedSharp.System.Native", "RedSharp.System.Native\RedSharp.System.Native.csproj", "{EBF5A616-2FC9-4C55-A738-6943BDA92B65}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RedSharp.System.Repositories", "RedSharp.System.Repositories\RedSharp.System.Repositories.csproj", "{7C9DB407-A5B4-4141-B60B-95A2CD8B9B44}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +29,10 @@ Global
 		{EBF5A616-2FC9-4C55-A738-6943BDA92B65}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{EBF5A616-2FC9-4C55-A738-6943BDA92B65}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{EBF5A616-2FC9-4C55-A738-6943BDA92B65}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7C9DB407-A5B4-4141-B60B-95A2CD8B9B44}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7C9DB407-A5B4-4141-B60B-95A2CD8B9B44}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7C9DB407-A5B4-4141-B60B-95A2CD8B9B44}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7C9DB407-A5B4-4141-B60B-95A2CD8B9B44}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

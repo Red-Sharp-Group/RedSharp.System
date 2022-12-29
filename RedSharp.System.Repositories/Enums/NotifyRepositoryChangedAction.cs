@@ -1,4 +1,4 @@
-﻿namespace RedSharp.Sys.Collections.Enums
+﻿namespace RedSharp.Sys.Repositories.Enums
 {
     public enum NotifyRepositoryChangedAction
     {

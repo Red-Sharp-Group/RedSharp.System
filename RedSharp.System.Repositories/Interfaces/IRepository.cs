@@ -1,12 +1,22 @@
-﻿using System.Collections.Generic;
-using System.Threading;
+﻿using System.Threading;
 using System.Threading.Tasks;
 using RedSharp.Sys.Interfaces.Shared;
+using RedSharp.Sys.Repositories.Enums;
 
-namespace RedSharp.Sys.Collections.Interfaces
+namespace RedSharp.Sys.Repositories.Interfaces
 {
     public interface IRepository<TIdentifier, TItem> : IReadOnlyRepository<TIdentifier, TItem>, IReadableIndication
     {
+        /// <summary>
+        /// This is FLAG!
+        /// Describes potential actions that you can do with this repository.
+        /// </summary>
+        /// <remarks>
+        /// Flags can be out of range than defined in <see cref="RepositoryCapabilities"/>.
+        /// </remarks>
+        RepositoryCapabilities Capabilities { get; }
+
+
         /// <summary>
         /// Adds new item to the repository.
         /// </summary>
@@ -17,18 +27,6 @@ namespace RedSharp.Sys.Collections.Interfaces
         /// Async version.
         /// </remarks>
         ValueTask AddAsync(TItem item, CancellationToken token = default);
-
-
-        /// <summary>
-        /// Apply changes for the given item.
-        /// </summary>
-        void Update(TItem item);
-
-        /// <inheritdoc cref="Update"/>
-        /// <remarks>
-        /// Async version.
-        /// </remarks>
-        ValueTask UpdateAsync(TItem item, CancellationToken token = default);
 
 
         /// <summary>
