@@ -124,7 +124,7 @@ namespace RedSharp.Sys.Collections.Abstracts
         /// Raises in the try {..} catch {..} statements.
         /// </remarks>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        protected void RaisePropertyChanging([CallerMemberName] String name = null)
+        protected void RaisePropertyChanging([CallerMemberName] string name = null)
         {
             if (PropertyChanging == null)
                 return;
@@ -148,7 +148,7 @@ namespace RedSharp.Sys.Collections.Abstracts
         protected void RaiseKeyChanging(object key = null)
         {
             if (key != null && key is string)
-                RaisePropertyChanging(String.Format(IndexerPropertyFormat, key));
+                RaisePropertyChanging(string.Format(IndexerPropertyFormat, key));
 
             RaisePropertyChanging(IndexerProperty);
         }
@@ -160,7 +160,7 @@ namespace RedSharp.Sys.Collections.Abstracts
         /// Raises in the try {..} catch {..} statements.
         /// </remarks>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        protected void RaisePropertyChanged([CallerMemberName] String name = null)
+        protected void RaisePropertyChanged([CallerMemberName] string name = null)
         {
             if (PropertyChanged == null)
                 return;
@@ -184,7 +184,7 @@ namespace RedSharp.Sys.Collections.Abstracts
         protected void RaiseKeyChanged(object key = null)
         {
             if (key != null && key is string)
-                RaisePropertyChanged(String.Format(IndexerPropertyFormat, key));
+                RaisePropertyChanged(string.Format(IndexerPropertyFormat, key));
 
             RaisePropertyChanged(IndexerProperty);
         }

@@ -38,7 +38,7 @@ namespace RedSharp.Sys.Collections.Utils
 
             public TItem Current { get; private set; }
 
-            Object IEnumerator.Current => Current;
+            object IEnumerator.Current => Current;
 
             public bool MoveNext()
             {

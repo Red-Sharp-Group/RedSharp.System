@@ -11,7 +11,7 @@ namespace RedSharp.Sys.Native.Abstracts
     /// </summary>
     public abstract class NativeHandleBase : DisposableBase, INativeHandle
     {
-        private const String AlreadyHasHandleError = "A handle is already initialized.";
+        private const string AlreadyHasHandleError = "A handle is already initialized.";
 
         /// <inheritdoc/>
         public bool IsHandleOwner { get; private set; }

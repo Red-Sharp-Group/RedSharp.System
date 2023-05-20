@@ -6,14 +6,14 @@ using RedSharp.Sys.Interfaces.Entities;
 namespace RedSharp.Sys.Abstracts
 {
     /// <summary>
-    /// Object that represents external application in this application.
+    /// object that represents external application in this application.
     /// </summary>
     /// <remarks>
     /// By default this object has to be used as a wrapper, it cannot start or kill the process. 
     /// </remarks>
     public abstract class ProcessKeeperBase : NotifiableCriticalDisposableBase, IProcessKeeper
     {
-        private String _exitApplicationError;
+        private string _exitApplicationError;
 
         /// <inheritdoc/>
         public bool IsProcessOwner { get; private set; }
@@ -51,7 +51,7 @@ namespace RedSharp.Sys.Abstracts
             AssociatedProcess.Exited += OnAssociatedProcessExited;
         }
 
-        private void OnAssociatedProcessExited(Object sender, EventArgs arguments)
+        private void OnAssociatedProcessExited(object sender, EventArgs arguments)
         {
             AssociatedProcess.Exited -= OnAssociatedProcessExited;
 

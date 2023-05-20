@@ -10,7 +10,7 @@ namespace RedSharp.Sys.Native.Abstracts
     /// </summary>
     public unsafe abstract class NativeWrapperBase<TStructure> : OwnedStructureBase where TStructure : unmanaged
     {
-        private const String SizesAreNotCorrectError = "Input size has to be more or equal to wrapped structure.";
+        private const string SizesAreNotCorrectError = "Input size has to be more or equal to wrapped structure.";
 
         /// <summary>
         /// Returns ref to the structure internally without any checks.
@@ -72,7 +72,7 @@ namespace RedSharp.Sys.Native.Abstracts
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private void ThrowIfSizeIsLessThanStructure(int value, [CallerArgumentExpression("value")] String name = "value")
+        private void ThrowIfSizeIsLessThanStructure(int value, [CallerArgumentExpression("value")] string name = "value")
         {
             if (value < sizeof(TStructure))
                 throw new ArgumentOutOfRangeException(name, SizesAreNotCorrectError);

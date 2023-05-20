@@ -10,7 +10,7 @@ namespace RedSharp.Sys.Abstracts
     /// </summary>
     public abstract class DisposableBase : IDisposable, IDisposeIndication
     {
-        public const String ObjectDisposedError = "This object was disposed.";
+        public const string ObjectDisposedError = "This object was disposed.";
 
         ~DisposableBase()
         {

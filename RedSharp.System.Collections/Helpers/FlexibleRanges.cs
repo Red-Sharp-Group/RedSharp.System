@@ -8,15 +8,6 @@ namespace RedSharp.Sys.Collections.Utils
     /// </summary>
     public static class FlexibleRanges
     {
-        public static readonly IntComparer IntComparerInstance;
-        public static readonly DoubleComparer DoubleComparerInstance;
-
-        static FlexibleRanges()
-        {
-            IntComparerInstance = new IntComparer();
-            DoubleComparerInstance = new DoubleComparer(ArgumentsGuard.ApproximationValue);
-        }
-
         public static FlexibleRange<int> Create<TItem>(TItem[] array)
         {
             ArgumentsGuard.ThrowIfNull(array);
@@ -32,7 +23,7 @@ namespace RedSharp.Sys.Collections.Utils
                 isLeftStrictly,
                 right,
                 isRightStrictly,
-                IntComparerInstance
+                IntComparer.Ascending
             );
         }
 
@@ -44,7 +35,7 @@ namespace RedSharp.Sys.Collections.Utils
                 isLeftStrictly,
                 right,
                 isRightStrictly,
-                DoubleComparerInstance
+                DoubleComparer.Ascending
             );
         }
     }

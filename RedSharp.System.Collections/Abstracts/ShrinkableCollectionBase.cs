@@ -123,7 +123,7 @@ namespace RedSharp.Sys.Collections.Abstracts
                 if (!_isAlive[i])
                     continue;
 
-                if (Object.Equals(_buffer[i], item))
+                if (object.Equals(_buffer[i], item))
                 {
                     result = true;
 
@@ -148,7 +148,7 @@ namespace RedSharp.Sys.Collections.Abstracts
                 if (!_isAlive[i])
                     continue;
 
-                if (Object.Equals(_buffer[i], item))
+                if (object.Equals(_buffer[i], item))
                 {
                     _buffer[i] = default;
 

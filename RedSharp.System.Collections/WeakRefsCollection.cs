@@ -9,16 +9,16 @@ using RedSharp.Sys.Helpers;
 namespace RedSharp.Sys.Collections
 {
     /// <summary>
-    /// Non-abstract realization of the <see cref="WeakShrinkableCollectionBase{TItem}"/> to use it as is and as composition.
+    /// Non-abstract realization of the <see cref="WeakRefsCollectionBase{TItem}"/> to use it as is and as composition.
     /// </summary>
-    public class WeakShrinkableCollection<TItem> : WeakShrinkableCollectionBase<TItem>, ICollection<TItem> where TItem : class
+    public class WeakRefsCollection<TItem> : WeakRefsCollectionBase<TItem>, ICollection<TItem> where TItem : class
     {
         private class WeakShrinkableCollectionEnumenator : IEnumerator<TItem>
         {
-            private WeakShrinkableCollection<TItem> _collection;
+            private WeakRefsCollection<TItem> _collection;
             private int _index;
 
-            public WeakShrinkableCollectionEnumenator(WeakShrinkableCollection<TItem> collection)
+            public WeakShrinkableCollectionEnumenator(WeakRefsCollection<TItem> collection)
             {
                 _collection = collection;
 

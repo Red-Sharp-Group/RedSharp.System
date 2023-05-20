@@ -7,13 +7,13 @@ namespace RedSharp.Sys.Native.Helpers
 {
     public unsafe static class FixedBuffersHelper
     {
-        private const String BuffersSizeError = "Length of the array and cell size is not the same.";
+        private const string BuffersSizeError = "Length of the array and cell size is not the same.";
 
         /// <inheritdoc cref="GetString(Span{byte}, Encoding)"/>
         /// <exception cref="ArgumentNullException">If pointer is null.</exception>
         /// <exception cref="ArgumentOutOfRangeException">If the size is less than zero.</exception>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static String GetString(byte* pointer, int size, Encoding encoding)
+        public static string GetString(byte* pointer, int size, Encoding encoding)
         {
             NativeGuard.ThrowIfNull(pointer);
             ArgumentsGuard.ThrowIfLessZero(size);
@@ -24,7 +24,7 @@ namespace RedSharp.Sys.Native.Helpers
         /// <inheritdoc cref="GetString(Span{byte}, Encoding)"/>
         /// <exception cref="ArgumentNullException">If buffer is null.</exception>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static String GetString(byte[] buffer, Encoding encoding)
+        public static string GetString(byte[] buffer, Encoding encoding)
         {
             ArgumentsGuard.ThrowIfNull(buffer);
 
@@ -40,12 +40,12 @@ namespace RedSharp.Sys.Native.Helpers
         /// </remarks>
         /// <exception cref="ArgumentNullException">If encoding is null.</exception>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static String GetString(Span<byte> span, Encoding encoding)
+        public static string GetString(Span<byte> span, Encoding encoding)
         {
             ArgumentsGuard.ThrowIfNull(encoding);
 
             if (span.Length == 0)
-                return String.Empty;
+                return string.Empty;
 
             int realSize = 0;
             int step = encoding.GetByteCount("\0");
@@ -77,7 +77,7 @@ namespace RedSharp.Sys.Native.Helpers
         /// <exception cref="ArgumentNullException">If pointer is null.</exception>
         /// <exception cref="ArgumentOutOfRangeException">If the size is less than zero.</exception>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static void SetString(byte* pointer, int size, Encoding encoding, String value)
+        public static void SetString(byte* pointer, int size, Encoding encoding, string value)
         {
             NativeGuard.ThrowIfNull(pointer);
             ArgumentsGuard.ThrowIfLessZero(size);
@@ -88,7 +88,7 @@ namespace RedSharp.Sys.Native.Helpers
         /// <inheritdoc cref="SetString(Span{byte}, Encoding, string)"/>
         /// <exception cref="ArgumentNullException">If buffer is null.</exception>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static void SetString(byte[] buffer, Encoding encoding, String value)
+        public static void SetString(byte[] buffer, Encoding encoding, string value)
         {
             ArgumentsGuard.ThrowIfNull(buffer);
 
@@ -106,7 +106,7 @@ namespace RedSharp.Sys.Native.Helpers
         /// </remarks>
         /// <exception cref="ArgumentNullException">If encoding is null.</exception>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static void SetString(Span<byte> span, Encoding encoding, String value)
+        public static void SetString(Span<byte> span, Encoding encoding, string value)
         {
             ArgumentsGuard.ThrowIfNull(encoding);
 
@@ -115,7 +115,7 @@ namespace RedSharp.Sys.Native.Helpers
 
             span.Fill(0);
 
-            if (String.IsNullOrEmpty(value))
+            if (string.IsNullOrEmpty(value))
                 return;
 
             int step = encoding.GetByteCount("\0");
