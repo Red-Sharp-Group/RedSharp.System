@@ -19,6 +19,6 @@ namespace RedSharp.Sys.Repositories.Interfaces
         /// <remarks>
         /// Async version.
         /// </remarks>
-        ValueTask<IEnumerable<TItem>> GetEnumerableAsync(int? offset = null, int? limit = null, CancellationToken token = default);
+        Task<IEnumerable<TItem>> GetEnumerableAsync(int? offset = null, int? limit = null, CancellationToken token = default);
     }
 }

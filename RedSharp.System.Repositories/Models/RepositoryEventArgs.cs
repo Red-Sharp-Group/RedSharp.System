@@ -26,7 +26,7 @@ namespace RedSharp.Sys.Repositories.Models
         {
             ArgumentsGuard.ThrowIfNull(items);
 
-            return new RepositoryEventArgs<TItem>(NotifyRepositoryChangedAction.Add, items, Array.Empty<TItem>());
+            return new RepositoryEventArgs<TItem>(NotifyRepositoryChangedAction.Added, items, Array.Empty<TItem>());
         }
 
         public static RepositoryEventArgs<TItem> Update<TItem>(params TItem[] items)
@@ -38,7 +38,7 @@ namespace RedSharp.Sys.Repositories.Models
         {
             ArgumentsGuard.ThrowIfNull(items);
 
-            return new RepositoryEventArgs<TItem>(NotifyRepositoryChangedAction.Update, items, items);
+            return new RepositoryEventArgs<TItem>(NotifyRepositoryChangedAction.Updated, items, items);
         }
 
         public static RepositoryEventArgs<TItem> Remove<TItem>(params TItem[] items)
@@ -50,7 +50,7 @@ namespace RedSharp.Sys.Repositories.Models
         {
             ArgumentsGuard.ThrowIfNull(items);
 
-            return new RepositoryEventArgs<TItem>(NotifyRepositoryChangedAction.Remove, Array.Empty<TItem>(), items);
+            return new RepositoryEventArgs<TItem>(NotifyRepositoryChangedAction.Removed, Array.Empty<TItem>(), items);
         }
 
         public static RepositoryEventArgs<TParameter> Reset()

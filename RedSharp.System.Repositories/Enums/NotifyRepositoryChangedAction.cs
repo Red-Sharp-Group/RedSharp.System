@@ -2,9 +2,9 @@
 {
     public enum NotifyRepositoryChangedAction
     {
-        Add,
-        Update,
-        Remove,
+        Added,
+        Updated,
+        Removed,
         Reset
     }
 }
