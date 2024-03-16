@@ -8,15 +8,15 @@ namespace RedSharp.Sys.Helpers
 {
     public static class ArgumentsGuard
     {
-        public const String WrongObjectType = "The input value has incorrect type.";
+        public const string WrongObjectType = "The input value has incorrect type.";
 
-        public const String ValueIsEqualError = "The input value: {0} - cannot be equal to {1}.";
+        public const string ValueIsEqualError = "The input value: {0} - cannot be equal to {1}.";
        
-        public const String ValueIsLessError = "The input value: {0} - is less than {1}.";
-        public const String ValueIsLessOrEqualError = "The input value: {0} - is less or equal to {1}.";
+        public const string ValueIsLessError = "The input value: {0} - is less than {1}.";
+        public const string ValueIsLessOrEqualError = "The input value: {0} - is less or equal to {1}.";
         
-        public const String ValueIsGreaterError = "The input value: {0} - is greater than {1}.";
-        public const String ValueIsGreaterOrEqualError = "The input value: {0} - is greater or equal to {1}.";
+        public const string ValueIsGreaterError = "The input value: {0} - is greater than {1}.";
+        public const string ValueIsGreaterOrEqualError = "The input value: {0} - is greater or equal to {1}.";
         
         public const double ApproximationValue = 0.000001;
 
@@ -28,7 +28,7 @@ namespace RedSharp.Sys.Helpers
         /// </summary>
         /// <exception cref="ArgumentNullException"/>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static void ThrowIfNull(Object value, [CallerArgumentExpression("value")] String name = "value")
+        public static void ThrowIfNull(object value, [CallerArgumentExpression("value")] string name = "value")
         {
             if (value == null)
                 throw new ArgumentNullException(name);
@@ -43,7 +43,7 @@ namespace RedSharp.Sys.Helpers
         /// </remarks>
         /// <exception cref="ObjectDisposedException"/>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static void ThrowIfDisposed(IDisposeIndication value, [CallerArgumentExpression("value")] String name = "value")
+        public static void ThrowIfDisposed(IDisposeIndication value, [CallerArgumentExpression("value")] string name = "value")
         {
             if (value.IsDisposed)
                 throw new ObjectDisposedException(name, $"The object {value.GetType().Name} is already disposed.");
@@ -56,7 +56,7 @@ namespace RedSharp.Sys.Helpers
         /// Method doesn't check object on null.
         /// </remarks>
         /// <exception cref="ObjectDisposedException"/>
-        public static void ThrowIfNotType<TType>(Object value, [CallerArgumentExpression("value")] String name = "value")
+        public static void ThrowIfNotType<TType>(object value, [CallerArgumentExpression("value")] string name = "value")
         {
             if (!(value is TType))
                 throw new ArgumentException(WrongObjectType, name);
@@ -70,7 +70,7 @@ namespace RedSharp.Sys.Helpers
         /// Method doesn't check object on null.
         /// </remarks>
         /// <exception cref="ObjectDisposedException"/>
-        public static void ThrowIfNotType<TType>(Object value, out TType casted, [CallerArgumentExpression("value")] String name = "value")
+        public static void ThrowIfNotType<TType>(object value, out TType casted, [CallerArgumentExpression("value")] string name = "value")
         {
             casted = (TType)value;
 
@@ -86,10 +86,10 @@ namespace RedSharp.Sys.Helpers
         /// </summary>
         /// <exception cref="ArgumentOutOfRangeException"/>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static void ThrowIfEqual(long value, long input, [CallerArgumentExpression("value")] String name = "value")
+        public static void ThrowIfEqual(long value, long input, [CallerArgumentExpression("value")] string name = "value")
         {
             if (value == input)
-                throw new ArgumentOutOfRangeException(name, String.Format(ValueIsEqualError, value, input));
+                throw new ArgumentOutOfRangeException(name, string.Format(ValueIsEqualError, value, input));
         }
 
         /// <summary>
@@ -97,10 +97,10 @@ namespace RedSharp.Sys.Helpers
         /// </summary>
         /// <exception cref="ArgumentOutOfRangeException"/>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static void ThrowIfEqual(ulong value, ulong input, [CallerArgumentExpression("value")] String name = "value")
+        public static void ThrowIfEqual(ulong value, ulong input, [CallerArgumentExpression("value")] string name = "value")
         {
             if (value == input)
-                throw new ArgumentOutOfRangeException(name, String.Format(ValueIsEqualError, value, input));
+                throw new ArgumentOutOfRangeException(name, string.Format(ValueIsEqualError, value, input));
         }
 
         /// <summary>
@@ -108,10 +108,10 @@ namespace RedSharp.Sys.Helpers
         /// </summary>
         /// <exception cref="ArgumentOutOfRangeException"/>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static void ThrowIfEqual(double value, double input, [CallerArgumentExpression("value")] String name = "value")
+        public static void ThrowIfEqual(double value, double input, [CallerArgumentExpression("value")] string name = "value")
         {
             if (Math.Abs(value - input) < ApproximationValue)
-                throw new ArgumentOutOfRangeException(name, String.Format(ValueIsEqualError, value, input));
+                throw new ArgumentOutOfRangeException(name, string.Format(ValueIsEqualError, value, input));
         }
 
         //=========================================================================//
@@ -122,10 +122,10 @@ namespace RedSharp.Sys.Helpers
         /// </summary>
         /// <exception cref="ArgumentOutOfRangeException"/>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static void ThrowIfLess(long value, long desired, [CallerArgumentExpression("value")] String name = "value")
+        public static void ThrowIfLess(long value, long desired, [CallerArgumentExpression("value")] string name = "value")
         {
             if (value < desired)
-                throw new ArgumentOutOfRangeException(name, String.Format(ValueIsLessError, value, desired));
+                throw new ArgumentOutOfRangeException(name, string.Format(ValueIsLessError, value, desired));
         }
 
         /// <summary>
@@ -133,10 +133,10 @@ namespace RedSharp.Sys.Helpers
         /// </summary>
         /// <exception cref="ArgumentOutOfRangeException"/>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static void ThrowIfLess(ulong value, ulong desired, [CallerArgumentExpression("value")] String name = "value")
+        public static void ThrowIfLess(ulong value, ulong desired, [CallerArgumentExpression("value")] string name = "value")
         {
             if (value < desired)
-                throw new ArgumentOutOfRangeException(name, String.Format(ValueIsLessError, value, desired));
+                throw new ArgumentOutOfRangeException(name, string.Format(ValueIsLessError, value, desired));
         }
 
         /// <summary>
@@ -144,10 +144,10 @@ namespace RedSharp.Sys.Helpers
         /// </summary>
         /// <exception cref="ArgumentOutOfRangeException"/>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static void ThrowIfLess(double value, double desired, [CallerArgumentExpression("value")] String name = "value")
+        public static void ThrowIfLess(double value, double desired, [CallerArgumentExpression("value")] string name = "value")
         {
             if (value < desired)
-                throw new ArgumentOutOfRangeException(name, String.Format(ValueIsLessError, value, desired));
+                throw new ArgumentOutOfRangeException(name, string.Format(ValueIsLessError, value, desired));
         }
 
         /// <summary>
@@ -155,10 +155,10 @@ namespace RedSharp.Sys.Helpers
         /// </summary>
         /// <exception cref="ArgumentOutOfRangeException"/>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static void ThrowIfLessOrEqual(long value, long desired, [CallerArgumentExpression("value")] String name = "value")
+        public static void ThrowIfLessOrEqual(long value, long desired, [CallerArgumentExpression("value")] string name = "value")
         {
             if (value <= desired)
-                throw new ArgumentOutOfRangeException(name, String.Format(ValueIsLessOrEqualError, value, desired));
+                throw new ArgumentOutOfRangeException(name, string.Format(ValueIsLessOrEqualError, value, desired));
         }
 
         /// <summary>
@@ -166,10 +166,10 @@ namespace RedSharp.Sys.Helpers
         /// </summary>
         /// <exception cref="ArgumentOutOfRangeException"/>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static void ThrowIfLessOrEqual(ulong value, ulong desired, [CallerArgumentExpression("value")] String name = "value")
+        public static void ThrowIfLessOrEqual(ulong value, ulong desired, [CallerArgumentExpression("value")] string name = "value")
         {
             if (value <= desired)
-                throw new ArgumentOutOfRangeException(name, String.Format(ValueIsLessOrEqualError, value, desired));
+                throw new ArgumentOutOfRangeException(name, string.Format(ValueIsLessOrEqualError, value, desired));
         }
 
         /// <summary>
@@ -180,10 +180,10 @@ namespace RedSharp.Sys.Helpers
         /// </remarks>
         /// <exception cref="ArgumentOutOfRangeException"/>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static void ThrowIfLessOrEqual(double value, double desired, [CallerArgumentExpression("value")] String name = "value")
+        public static void ThrowIfLessOrEqual(double value, double desired, [CallerArgumentExpression("value")] string name = "value")
         {
             if (value < desired || Math.Abs(value - desired) < ApproximationValue)
-                throw new ArgumentOutOfRangeException(name, String.Format(ValueIsLessOrEqualError, value, desired));
+                throw new ArgumentOutOfRangeException(name, string.Format(ValueIsLessOrEqualError, value, desired));
         }
 
         //=========================================================================//
@@ -194,10 +194,10 @@ namespace RedSharp.Sys.Helpers
         /// </summary>
         /// <exception cref="ArgumentOutOfRangeException"/>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static void ThrowIfGreater(long value, long desired, [CallerArgumentExpression("value")] String name = "value")
+        public static void ThrowIfGreater(long value, long desired, [CallerArgumentExpression("value")] string name = "value")
         {
             if (value > desired)
-                throw new ArgumentOutOfRangeException(name, String.Format(ValueIsGreaterError, value, desired));
+                throw new ArgumentOutOfRangeException(name, string.Format(ValueIsGreaterError, value, desired));
         }
 
         /// <summary>
@@ -205,10 +205,10 @@ namespace RedSharp.Sys.Helpers
         /// </summary>
         /// <exception cref="ArgumentOutOfRangeException"/>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static void ThrowIfGreater(ulong value, ulong desired, [CallerArgumentExpression("value")] String name = "value")
+        public static void ThrowIfGreater(ulong value, ulong desired, [CallerArgumentExpression("value")] string name = "value")
         {
             if (value > desired)
-                throw new ArgumentOutOfRangeException(name, String.Format(ValueIsGreaterError, value, desired));
+                throw new ArgumentOutOfRangeException(name, string.Format(ValueIsGreaterError, value, desired));
         }
 
         /// <summary>
@@ -216,10 +216,10 @@ namespace RedSharp.Sys.Helpers
         /// </summary>
         /// <exception cref="ArgumentOutOfRangeException"/>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static void ThrowIfGreater(double value, double desired, [CallerArgumentExpression("value")] String name = "value")
+        public static void ThrowIfGreater(double value, double desired, [CallerArgumentExpression("value")] string name = "value")
         {
             if (value > desired)
-                throw new ArgumentOutOfRangeException(name, String.Format(ValueIsGreaterError, value, desired));
+                throw new ArgumentOutOfRangeException(name, string.Format(ValueIsGreaterError, value, desired));
         }
 
         /// <summary>
@@ -227,10 +227,10 @@ namespace RedSharp.Sys.Helpers
         /// </summary>
         /// <exception cref="ArgumentOutOfRangeException"/>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static void ThrowIfGreaterOrEqual(long value, long desired, [CallerArgumentExpression("value")] String name = "value")
+        public static void ThrowIfGreaterOrEqual(long value, long desired, [CallerArgumentExpression("value")] string name = "value")
         {
             if (value >= desired)
-                throw new ArgumentOutOfRangeException(name, String.Format(ValueIsGreaterOrEqualError, value, desired));
+                throw new ArgumentOutOfRangeException(name, string.Format(ValueIsGreaterOrEqualError, value, desired));
         }
 
         /// <summary>
@@ -238,10 +238,10 @@ namespace RedSharp.Sys.Helpers
         /// </summary>
         /// <exception cref="ArgumentOutOfRangeException"/>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static void ThrowIfGreaterOrEqual(ulong value, ulong desired, [CallerArgumentExpression("value")] String name = "value")
+        public static void ThrowIfGreaterOrEqual(ulong value, ulong desired, [CallerArgumentExpression("value")] string name = "value")
         {
             if (value >= desired)
-                throw new ArgumentOutOfRangeException(name, String.Format(ValueIsGreaterOrEqualError, value, desired));
+                throw new ArgumentOutOfRangeException(name, string.Format(ValueIsGreaterOrEqualError, value, desired));
         }
 
         /// <summary>
@@ -252,10 +252,10 @@ namespace RedSharp.Sys.Helpers
         /// </remarks>
         /// <exception cref="ArgumentOutOfRangeException"/>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static void ThrowIfGreaterOrEqual(double value, double desired, [CallerArgumentExpression("value")] String name = "value")
+        public static void ThrowIfGreaterOrEqual(double value, double desired, [CallerArgumentExpression("value")] string name = "value")
         {
             if (value > desired || Math.Abs(value - desired) < ApproximationValue)
-                throw new ArgumentOutOfRangeException(name, String.Format(ValueIsGreaterOrEqualError, value, desired));
+                throw new ArgumentOutOfRangeException(name, string.Format(ValueIsGreaterOrEqualError, value, desired));
         }
 
         //=========================================================================//
@@ -266,7 +266,7 @@ namespace RedSharp.Sys.Helpers
         /// </summary>
         /// <exception cref="ArgumentOutOfRangeException"/>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static void ThrowIfLessZero(long value, [CallerArgumentExpression("value")] String name = "value")
+        public static void ThrowIfLessZero(long value, [CallerArgumentExpression("value")] string name = "value")
         {
             ThrowIfLess(value, 0, name);
         }
@@ -276,7 +276,7 @@ namespace RedSharp.Sys.Helpers
         /// </summary>
         /// <exception cref="ArgumentOutOfRangeException"/>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static void ThrowIfLessZero(double value, [CallerArgumentExpression("value")] String name = "value")
+        public static void ThrowIfLessZero(double value, [CallerArgumentExpression("value")] string name = "value")
         {
             ThrowIfLess(value, 0, name);
         }
@@ -286,7 +286,7 @@ namespace RedSharp.Sys.Helpers
         /// </summary>
         /// <exception cref="ArgumentOutOfRangeException"/>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static void ThrowIfLessOrEqualZero(long value, [CallerArgumentExpression("value")] String name = "value")
+        public static void ThrowIfLessOrEqualZero(long value, [CallerArgumentExpression("value")] string name = "value")
         {
             ThrowIfLessOrEqual(value, 0, name);
         }
@@ -299,7 +299,7 @@ namespace RedSharp.Sys.Helpers
         /// </remarks>
         /// <exception cref="ArgumentOutOfRangeException"/>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static void ThrowIfLessOrEqualZero(double value, [CallerArgumentExpression("value")] String name = "value")
+        public static void ThrowIfLessOrEqualZero(double value, [CallerArgumentExpression("value")] string name = "value")
         {
             ThrowIfLessOrEqual(value, 0, name);
         }
@@ -309,7 +309,7 @@ namespace RedSharp.Sys.Helpers
         /// </summary>
         /// <exception cref="ArgumentOutOfRangeException"/>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static void ThrowIfEqualZero(long value, [CallerArgumentExpression("value")] String name = "value")
+        public static void ThrowIfEqualZero(long value, [CallerArgumentExpression("value")] string name = "value")
         {
             ThrowIfEqual(value, 0, name);
         }
@@ -319,7 +319,7 @@ namespace RedSharp.Sys.Helpers
         /// </summary>
         /// <exception cref="ArgumentOutOfRangeException"/>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static void ThrowIfEqualZero(ulong value, [CallerArgumentExpression("value")] String name = "value")
+        public static void ThrowIfEqualZero(ulong value, [CallerArgumentExpression("value")] string name = "value")
         {
             ThrowIfEqual(value, 0, name);
         }
@@ -332,7 +332,7 @@ namespace RedSharp.Sys.Helpers
         /// </remarks>
         /// <exception cref="ArgumentOutOfRangeException"/>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static void ThrowIfEqualZero(double value, [CallerArgumentExpression("value")] String name = "value")
+        public static void ThrowIfEqualZero(double value, [CallerArgumentExpression("value")] string name = "value")
         {
             ThrowIfEqual(value, 0, name);
         }
@@ -345,9 +345,9 @@ namespace RedSharp.Sys.Helpers
         /// </summary>
         /// <exception cref="ArgumentException"/>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static void ThrowIfNullOrEmpty(String value, [CallerArgumentExpression("value")] String name = "value")
+        public static void ThrowIfNullOrEmpty(string value, [CallerArgumentExpression("value")] string name = "value")
         {
-            if (String.IsNullOrEmpty(value))
+            if (string.IsNullOrEmpty(value))
                 throw new ArgumentException(name, "String cannot be null or empty.");
         }
 
@@ -359,7 +359,7 @@ namespace RedSharp.Sys.Helpers
         /// </summary>
         /// <exception cref="ArgumentException"/>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static void ThrowIfNullOrEmpty<TItem>(IEnumerable<TItem> value, [CallerArgumentExpression("value")] String name = "value")
+        public static void ThrowIfNullOrEmpty<TItem>(IEnumerable<TItem> value, [CallerArgumentExpression("value")] string name = "value")
         {
             if (value == null || !value.Any())
                 throw new ArgumentException(name, "Collection cannot be null or empty.");

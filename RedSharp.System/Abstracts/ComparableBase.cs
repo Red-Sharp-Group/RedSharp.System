@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Runtime.CompilerServices;
 
 namespace RedSharp.Sys.Abstracts
 {
@@ -60,13 +61,14 @@ namespace RedSharp.Sys.Abstracts
             return CompareTo(another);
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private static int InternalEquals(ComparableBase first, ComparableBase second)
         {
-            if (Object.ReferenceEquals(first, second))
+            if (object.ReferenceEquals(first, second))
                 return 0;
-            else if (Object.ReferenceEquals(second, null))
+            else if (object.ReferenceEquals(second, null))
                 return 1;
-            else if (Object.ReferenceEquals(first, null))
+            else if (object.ReferenceEquals(first, null))
                 return -1;
             else
                 return first.CompareTo(second);

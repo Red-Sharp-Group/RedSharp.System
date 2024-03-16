@@ -18,7 +18,7 @@ namespace RedSharp.Sys.Collections.Helpers
         /// </summary>
         /// <exception cref="ArgumentOutOfRangeException"/>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static void ThrowIfNotInRange<TItem>(TItem value, FlexibleRange<TItem> range, [CallerArgumentExpression("value")] String name = "value")
+        public static void ThrowIfNotInRange<TItem>(TItem value, FlexibleRange<TItem> range, [CallerArgumentExpression("value")] string name = "value")
         {
             if (!range.IsInRange(value))
                 throw new ArgumentOutOfRangeException(name);

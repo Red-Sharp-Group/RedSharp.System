@@ -10,11 +10,11 @@ namespace RedSharp.Sys.Abstracts
     /// </summary>
     public abstract class DisposableBase : IDisposable, IDisposeIndication
     {
-        public const String ObjectDisposedError = "This object was disposed.";
+        public const string ObjectDisposedError = "This object was disposed.";
 
         ~DisposableBase()
         {
-            SafeDisposed(false);
+            SafeDispose(false);
         }
 
         /// <inheritdoc/>
@@ -26,7 +26,7 @@ namespace RedSharp.Sys.Abstracts
             if (IsDisposed)
                 return;
 
-            SafeDisposed(true);
+            SafeDispose(true);
 
             GC.SuppressFinalize(this);
 
@@ -39,8 +39,7 @@ namespace RedSharp.Sys.Abstracts
         /// <remarks>
         /// Do not change the method signature.
         /// </remarks>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private void SafeDisposed(bool manual)
+        protected internal virtual void SafeDispose(bool manual)
         {
             try
             {

@@ -11,8 +11,13 @@ namespace RedSharp.Sys.Interfaces.Entities
     /// <summary>
     /// This interface was created for the objects that work as wrapper for another application.
     /// </summary>
-    public interface IProcessKeeper : IDisposable, IDisposeIndication
+    public interface IProcessKeeper : IDisposable, IDisposeIndication, INotifyDisposing, INotifyDisposed
     {
+        /// <summary>
+        /// Marks that disposing of this item will kill the <see cref="AssociatedProcess"/>
+        /// </summary>
+        bool IsProcessOwner { get; }
+
         /// <summary>
         /// Associated process.
         /// </summary>

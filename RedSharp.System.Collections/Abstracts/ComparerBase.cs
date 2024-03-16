@@ -34,7 +34,7 @@ namespace RedSharp.Sys.Collections.Abstracts
             return result;
         }
         
-        int IComparer.Compare(Object first, Object second)
+        int IComparer.Compare(object first, object second)
         {
             return Compare((TItem)first, (TItem)second);
         }
@@ -45,7 +45,7 @@ namespace RedSharp.Sys.Collections.Abstracts
             return Compare(first, second) == 0;
         }
 
-        bool IEqualityComparer.Equals(Object first, Object second)
+        bool IEqualityComparer.Equals(object first, object second)
         {
             return Equals((TItem)first, (TItem)second);
         }
@@ -56,7 +56,7 @@ namespace RedSharp.Sys.Collections.Abstracts
             return InternalGetHashCode(obj);
         }
 
-        int IEqualityComparer.GetHashCode(Object obj)
+        int IEqualityComparer.GetHashCode(object obj)
         { 
             ArgumentsGuard.ThrowIfNotType(obj, out TItem item);
 

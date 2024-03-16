@@ -13,8 +13,8 @@ namespace RedSharp.Sys.Native.Abstracts
     /// </summary>
     public abstract unsafe class NativeStructureBase : DisposableBase, INativeStructure
     {
-        public const String AlreadyHasAllocatedError = "Memory is already allocated";
-        public const String AllocateReturnedUnexpectedValueError = nameof(Allocate) + " - method returns an unexpected result.";
+        public const string AlreadyHasAllocatedError = "Memory is already allocated";
+        public const string AllocateReturnedUnexpectedValueError = nameof(Allocate) + " - method returns an unexpected result.";
 
         /// <inheritdoc/>
         public int Size { get; private set; }

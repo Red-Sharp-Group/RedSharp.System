@@ -13,7 +13,7 @@ namespace RedSharp.Sys.Collections.Abstracts
     /// because the basic functionality works better than composition.
     /// </summary>
     /// <typeparam name="TItem">Has to be a class instance.</typeparam>
-    public abstract class WeakShrinkableCollectionBase<TItem> where TItem : class
+    public abstract class WeakRefsCollectionBase<TItem> where TItem : class
     {
         private const byte DecreaseTryingMax = 8;
 
@@ -23,7 +23,7 @@ namespace RedSharp.Sys.Collections.Abstracts
         private int _firstEmptyPosition;
         private byte _decreaseTrying;
 
-        public WeakShrinkableCollectionBase()
+        public WeakRefsCollectionBase()
         {
             InitializeDefaultMembers();
         }

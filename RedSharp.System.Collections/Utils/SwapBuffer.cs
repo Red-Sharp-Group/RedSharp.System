@@ -26,8 +26,6 @@ namespace RedSharp.Sys.Collections.Utils
         private TITem[] _backBuffer;
 
         private SemaphoreSlim _semaphore;
-        private Object _lock;
-        private SpinLock _spinlock;
         private Action<TITem[], int> _bufferExchangeCallback;
         private bool _invokeCallbackAsTask;
 
@@ -48,8 +46,6 @@ namespace RedSharp.Sys.Collections.Utils
             _backBuffer = new TITem[_length];
 
             _semaphore = new SemaphoreSlim(_concurrentNumber);
-            _lock = new Object();
-            _spinlock = new SpinLock();
         }
         
         /// <summary>
@@ -61,14 +57,7 @@ namespace RedSharp.Sys.Collections.Utils
             //other thread will not switch the buffer.
             _semaphore.Wait();
 
-            bool lockTaken = false;
-
-            _spinlock.Enter(ref lockTaken);
-
-            var result = _currentIndex;
-
-            if (lockTaken)
-                _spinlock.Exit(false);
+            var result = Math.Min(_currentIndex, _length);
 
             _semaphore.Release();
 
@@ -94,7 +83,7 @@ namespace RedSharp.Sys.Collections.Utils
         {
             //I have to guarantee that no other
             //thread will try to swap buffer
-            Monitor.Enter(_lock);
+            Monitor.Enter(_semaphore);
 
             InternalExchangeBuffer();
         }
@@ -110,36 +99,14 @@ namespace RedSharp.Sys.Collections.Utils
             //other thread will not switch the buffer.
             _semaphore.Wait();
 
-            bool lockTaken = false;
-            int index = 0;
+            int index = Interlocked.Increment(ref _currentIndex);
 
-            //Spin lock much faster that locking
-            //And this is the only operation that
-            //has to be performed in a complete single access.
-            _spinlock.Enter(ref lockTaken);
-
-            if (_currentIndex >= _length)
+            if (index >= _length)
             {
-                //If we have no free index
-                //we have to release all our lock 
-                //and try to swap buffers.
-
-                if (lockTaken)
-                    _spinlock.Exit(false);
-
                 _semaphore.Release();
 
                 return false;
             }
-            else
-            {
-                index = _currentIndex;
-
-                _currentIndex++;
-            }
-
-            if (lockTaken)
-                _spinlock.Exit(false);
 
             //We do not have to lock indexing operation
             //because it works with only one cell of the array
@@ -163,26 +130,14 @@ namespace RedSharp.Sys.Collections.Utils
             //but I don't know how long it would be.
             //because for the swap object has to block
             //the whole semaphore
-            Monitor.Enter(_lock);
-
-            bool lockTaken = false;
-
-            _spinlock.Enter(ref lockTaken);
+            Monitor.Enter(_semaphore);
 
             if (_currentIndex < _length)
             {
-                //In the case when one of threads
-                //have swapped the buffer already
-                if (lockTaken)
-                    _spinlock.Exit(false);
-
-                Monitor.Exit(_lock);
+                Monitor.Exit(_semaphore);
 
                 return;
             }
-
-            if (lockTaken)
-                _spinlock.Exit(false);
 
             InternalExchangeBuffer();
         }
@@ -208,7 +163,7 @@ namespace RedSharp.Sys.Collections.Utils
 
             //When we swapped the buffers we releases
             //almost all thread-sync objects
-            Monitor.Exit(_lock);
+            Monitor.Exit(_semaphore);
 
             //live just one in the locked state
             _semaphore.Release(_concurrentNumber - 1);
